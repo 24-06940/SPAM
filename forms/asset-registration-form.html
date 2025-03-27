@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register New Asset - Preventive Maintenance Management System</title>
+  <link rel="stylesheet" href="../custom.css">
+  <style>
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .form-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #dadce0;
+    }
+    
+    .form-section {
+      margin-bottom: 24px;
+    }
+    
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 16px;
+    }
+    
+    .submit-button {
+      background-color: #1a73e8;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .submit-button:hover {
+      background-color: #1765cc;
+    }
+    
+    .cancel-button {
+      background-color: #f1f3f4;
+      color: #5f6368;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+    
+    .cancel-button:hover {
+      background-color: #e8eaed;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+    
+    .success-message {
+      background-color: #e6f4ea;
+      color: #0d652d;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #34a853;
+      display: none;
+    }
+    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -8px;
+    }
+    
+    .col {
+      padding: 0 8px;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .file-upload {
+      margin-top: 8px;
+    }
+    
+    .checkbox-group {
+      margin-top: 16px;
+    }
+    
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    
+    .tab-container {
+      margin-bottom: 24px;
+    }
+    
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #dadce0;
+      margin-bottom: 16px;
+    }
+    
+    .tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      color: #5f6368;
+    }
+    
+    .tab.active {
+      color: #1a73e8;
+      border-bottom-color: #1a73e8;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>Register New Asset</h1>
+    <a href="../asset-management.html" class="secondary-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Asset Management
+    </a>
+  </div>
+  
+  <div class="success-message" id="success-message">
+    <strong>Success!</strong> The asset has been registered successfully.
+  </div>
+  
+  <div class="form-container">
+    <h2 class="form-title">Asset Information</h2>
+    
+    <div class="tab-container">
+      <div class="tabs">
+        <div class="tab active" data-tab="equipment">Equipment</div>
+        <div class="tab" data-tab="instrument">Instrument</div>
+        <div class="tab" data-tab="tool">Tool</div>
+        <div class="tab" data-tab="spare-part">Spare Part</div>
+      </div>
+      
+      <div class="tab-content active" id="equipment-tab">
+        <p>Register new production equipment, machinery, or facility systems.</p>
+      </div>
+      
+      <div class="tab-content" id="instrument-tab">
+        <p>Register new measurement instruments, meters, gauges, or sensors.</p>
+      </div>
+      
+      <div class="tab-content" id="tool-tab">
+        <p>Register new maintenance tools, hand tools, or power tools.</p>
+      </div>
+      
+      <div class="tab-content" id="spare-part-tab">
+        <p>Register new spare parts, consumables, or components.</p>
+      </div>
+    </div>
+    
+    <form id="asset-registration-form">
+      <input type="hidden" id="asset-type" value="equipment">
+      
+      <div class="form-section">
+        <div class="form-section-title">Basic Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="asset-id" class="form-label">Asset ID</label>
+              <input type="text" id="asset-id" class="form-input" placeholder="Enter asset ID or leave blank for auto-generated" pattern="[A-Za-z0-9-_]+">
+              <small class="helper-text">Letters, numbers, hyphens, and underscores only</small>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="asset-name" class="form-label">Asset Name</label>
+              <input type="text" id="asset-name" class="form-input" placeholder="Enter asset name" required>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="category" class="form-label">Category</label>
+              <select id="category" class="form-select" required>
+                <option value="" disabled selected>Select category</option>
+                <!-- Equipment categories -->
+                <option value="Production Machine" class="equipment-option">Production Machine</option>
+                <option value="HVAC System" class="equipment-option">HVAC System</option>
+                <option value="Electrical System" class="equipment-option">Electrical System</option>
+                <option value="Plumbing System" class="equipment-option">Plumbing System</option>
+                <option value="Compressor" class="equipment-option">Compressor</option>
+                <option value="Pump" class="equipment-option">Pump</option>
+                <option value="Conveyor" class="equipment-option">Conveyor</option>
+                <option value="Generator" class="equipment-option">Generator</option>
+                <option value="Boiler" class="equipment-option">Boiler</option>
+                <option value="Motor" class="equipment-option">Motor</option>
+                <option value="Transformer" class="equipment-option">Transformer</option>
+                <option value="Robot" class="equipment-option">Robot</option>
+                <option value="Vehicle" class="equipment-option">Vehicle</option>
+                
+                <!-- Instrument categories -->
+                <option value="Pressure Gauge" class="instrument-option hidden">Pressure Gauge</option>
+                <option value="Temperature Sensor" class="instrument-option hidden">Temperature Sensor</option>
+                <option value="Flow Meter" class="instrument-option hidden">Flow Meter</option>
+                <option value="Level Indicator" class="instrument-option hidden">Level Indicator</option>
+                <option value="pH Meter" class="instrument-option hidden">pH Meter</option>
+                <option value="Conductivity Meter" class="instrument-option hidden">Conductivity Meter</option>
+                <option value="Weighing Scale" class="instrument-option hidden">Weighing Scale</option>
+                <option value="Multimeter" class="instrument-option hidden">Multimeter</option>
+                <option value="Oscilloscope" class="instrument-option hidden">Oscilloscope</option>
+                <option value="Caliper" class="instrument-option hidden">Caliper</option>
+                <option value="Micrometer" class="instrument-option hidden">Micrometer</option>
+                <option value="Torque Meter" class="instrument-option hidden">Torque Meter</option>
+                
+                <!-- Tool categories -->
+                <option value="Hand Tool" class="tool-option hidden">Hand Tool</option>
+                <option value="Power Tool" class="tool-option hidden">Power Tool</option>
+                <option value="Diagnostic Tool" class="tool-option hidden">Diagnostic Tool</option>
+                <option value="Cutting Tool" class="tool-option hidden">Cutting Tool</option>
+                <option value="Welding Equipment" class="tool-option hidden">Welding Equipment</option>
+                <option value="Lifting Equipment" class="tool-option hidden">Lifting Equipment</option>
+                <option value="Safety Equipment" class="tool-option hidden">Safety Equipment</option>
+                
+                <!-- Spare Part categories -->
+                <option value="Mechanical Part" class="spare-part-option hidden">Mechanical Part</option>
+                <option value="Electrical Part" class="spare-part-option hidden">Electrical Part</option>
+                <option value="Electronic Component" class="spare-part-option hidden">Electronic Component</option>
+                <option value="Hydraulic Component" class="spare-part-option hidden">Hydraulic Component</option>
+                <option value="Pneumatic Component" class="spare-part-option hidden">Pneumatic Component</option>
+                <option value="Fastener" class="spare-part-option hidden">Fastener</option>
+                <option value="Bearing" class="spare-part-option hidden">Bearing</option>
+                <option value="Seal" class="spare-part-option hidden">Seal</option>
+                <option value="Belt" class="spare-part-option hidden">Belt</option>
+                <option value="Filter" class="spare-part-option hidden">Filter</option>
+                <option value="Consumable" class="spare-part-option hidden">Consumable</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="status" class="form-label">Status</label>
+              <select id="status" class="form-select" required>
+                <option value="" disabled selected>Select status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="In Maintenance">In Maintenance</option>
+                <option value="In Storage">In Storage</option>
+                <option value="Out of Service">Out of Service</option>
+                <option value="Pending Installation">Pending Installation</option>
+                <option value="Under Repair">Under Repair</option>
+                <option value="Disposed">Disposed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="location" class="form-label">Location</label>
+              <input type="text" id="location" class="form-input" placeholder="Enter asset location">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="department" class="form-label">Department</label>
+              <select id="department" class="form-select">
+                <option value="" disabled selected>Select department</option>
+                <option value="Production">Production</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Quality Control">Quality Control</option>
+                <option value="R&D">R&D</option>
+                <option value="Warehouse">Warehouse</option>
+                <option value="Packaging">Packaging</option>
+                <option value="Facilities">Facilities</option>
+                <option value="IT">IT</option>
+                <option value="Safety">Safety</option>
+                <option value="Administration">Administration</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Manufacturer Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="manufacturer" class="form-label">Manufacturer</label>
+              <input type="text" id="manufacturer" class="form-input" placeholder="Enter manufacturer name">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="model" class="form-label">Model Number</label>
+              <input type="text" id="model" class="form-input" placeholder="Enter model number">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="serial-number" class="form-label">Serial Number</label>
+              <input type="text" id="serial-number" class="form-input" placeholder="Enter serial number">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="manufacture-date" class="form-label">Manufacture Date</label>
+              <input type="date" id="manufacture-date" class="form-input">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Acquisition Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="purchase-date" class="form-label">Purchase Date</label>
+              <input type="date" id="purchase-date" class="form-input">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="installation-date" class="form-label">Installation Date</label>
+              <input type="date" id="installation-date" class="form-input">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="purchase-cost" class="form-label">Purchase Cost</label>
+              <input type="number" id="purchase-cost" class="form-input" placeholder="Enter cost" min="0" step="0.01">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="warranty-expiry" class="form-label">Warranty Expiry Date</label>
+              <input type="date" id="warranty-expiry" class="form-input">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="vendor" class="form-label">Vendor/Supplier</label>
+          <input type="text" id="vendor" class="form-input" placeholder="Enter vendor or supplier name">
+        </div>
+      </div>
+      
+      <div class="form-section" id="maintenance-section">
+        <div class="form-section-title">Maintenance Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="maintenance-frequency" class="form-label">Maintenance Frequency</label>
+              <select id="maintenance-frequency" class="form-select">
+                <option value="" disabled selected>Select frequency</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Bi-Weekly">Bi-Weekly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Semi-Annually">Semi-Annually</option>
+                <option value="Annually">Annually</option>
+                <option value="Bi-Annually">Bi-Annually</option>
+                <option value="As Needed">As Needed</option>
+                <option value="None">None</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="last-maintenance" class="form-label">Last Maintenance Date</label>
+              <input type="date" id="last-maintenance" class="form-input">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="maintenance-instructions" class="form-label">Maintenance Instructions</label>
+          <textarea id="maintenance-instructions" class="form-textarea" placeholder="Enter maintenance instructions or notes"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-section" id="calibration-section">
+        <div class="form-section-title">Calibration Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="calibration-frequency" class="form-label">Calibration Frequency</label>
+              <select id="calibration-frequency" class="form-select">
+                <option value="" disabled selected>Select frequency</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Semi-Annually">Semi-Annually</option>
+                <option value="Annually">Annually</option>
+                <option value="Bi-Annually">Bi-Annually</option>
+                <option value="None">None</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="last-calibration" class="form-label">Last Calibration Date</label>
+              <input type="date" id="last-calibration" class="form-input">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="calibration-procedure" class="form-label">Calibration Procedure</label>
+          <textarea id="calibration-procedure" class="form-textarea" placeholder="Enter calibration procedure or reference document"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-section" id="inventory-section">
+        <div class="form-section-title">Inventory Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="current-quantity" class="form-label">Current Quantity</label>
+              <input type="number" id="current-quantity" class="form-input" placeholder="Enter quantity" min="0" value="1">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="minimum-quantity" class="form-label">Minimum Quantity</label>
+              <input type="number" id="minimum-quantity" class="form-input" placeholder="Enter minimum stock level" min="0" value="0">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="storage-location" class="form-label">Storage Location</label>
+          <input type="text" id="storage-location" class="form-input" placeholder="Enter storage location details">
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Technical Specifications</div>
+        
+        <div class="form-group">
+          <label for="specifications" class="form-label">Specifications</label>
+          <textarea id="specifications" class="form-textarea" placeholder="Enter technical specifications"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="attachments" class="form-label">Attachments (Manuals, Datasheets, Images)</label>
+          <input type="file" id="attachments" class="file-upload" multiple>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Additional Information</div>
+        
+        <div class="form-group">
+          <label for="notes" class="form-label">Notes</label>
+          <textarea id="notes" class="form-textarea" placeholder="Enter any additional notes or comments"></textarea>
+        </div>
+        
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="critical-asset"> Critical asset (high priority for maintenance)
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="requires-special-tools"> Requires special tools for maintenance
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="safety-hazard"> Presents safety hazards
+          </label>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <a href="../asset-management.html" class="cancel-button">Cancel</a>
+        <button type="submit" class="submit-button">Register Asset</button>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    // DOM elements
+    const tabButtons = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const assetTypeInput = document.getElementById('asset-type');
+    const maintenanceSection = document.getElementById('maintenance-section');
+    const calibrationSection = document.getElementById('calibration-section');
+    const inventorySection = document.getElementById('inventory-section');
+    const categorySelect = document.getElementById('category');
+    
+    // Tab switching functionality
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all tabs
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        button.classList.add('active');
+        const tabId = button.getAttribute('data-tab');
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+        
+        // Update asset type
+        assetTypeInput.value = tabId;
+        
+        // Show/hide sections based on asset type
+        updateSections(tabId);
+        
+        // Update category options
+        updateCategoryOptions(tabId);
+      });
+    });
+    
+    // Function to update visible sections based on asset type
+    function updateSections(assetType) {
+      // Show/hide maintenance section
+      maintenanceSection.style.display = 
+        ['equipment', 'instrument', 'tool'].includes(assetType) ? 'block' : 'none';
+      
+      // Show/hide calibration section
+      calibrationSection.style.display = 
+        ['instrument'].includes(assetType) ? 'block' : 'none';
+      
+      // Show/hide inventory section
+      inventorySection.style.display = 
+        ['tool', 'spare-part'].includes(assetType) ? 'block' : 'none';
+    }
+    
+    // Function to update category options based on asset type
+    function updateCategoryOptions(assetType) {
+      // Hide all options first
+      const allOptions = categorySelect.querySelectorAll('option:not([disabled])');
+      allOptions.forEach(option => {
+        option.classList.add('hidden');
+        option.style.display = 'none';
+      });
+      
+      // Show only relevant options
+      const relevantOptions = categorySelect.querySelectorAll(`.${assetType}-option`);
+      relevantOptions.forEach(option => {
+        option.classList.remove('hidden');
+        option.style.display = 'block';
+      });
+      
+      // Reset selection
+      categorySelect.value = '';
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set today's date as default for dates without values
+      document.querySelectorAll('input[type="date"]:not([value])').forEach(input => {
+        if (!input.value) {
+          const today = new Date();
+          
+          // For warranty and next due type dates, set default to 1 year from now
+          if (input.id === 'warranty-expiry') {
+            const nextYear = new Date();
+            nextYear.setFullYear(nextYear.getFullYear() + 1);
+            input.valueAsDate = nextYear;
+          }
+        }
+      });
+      
+      // Generate asset ID if not provided
+      document.getElementById('asset-registration-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Check if asset ID is empty
+        const assetIdInput = document.getElementById('asset-id');
+        if (!assetIdInput.value.trim()) {
+          // Generate a unique asset ID based on asset type and timestamp
+          const assetType = assetTypeInput.value.toUpperCase().substring(0, 3);
+          const timestamp = Date.now().toString().substring(6); // Use last 7 digits of timestamp
+          const randomDigits = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+          assetIdInput.value = `${assetType}-${timestamp}-${randomDigits}`;
+        }
+        
+        // Create asset object
+        const asset = {
+          assetId: document.getElementById('asset-id').value,
+          assetName: document.getElementById('asset-name').value,
+          assetType: assetTypeInput.value,
+          category: document.getElementById('category').value,
+          status: document.getElementById('status').value,
+          location: document.getElementById('location').value,
+          department: document.getElementById('department').value,
+          manufacturer: document.getElementById('manufacturer').value,
+          model: document.getElementById('model').value,
+          serialNumber: document.getElementById('serial-number').value,
+          manufactureDate: document.getElementById('manufacture-date').value,
+          purchaseDate: document.getElementById('purchase-date').value,
+          installationDate: document.getElementById('installation-date').value,
+          purchaseCost: document.getElementById('purchase-cost').value,
+          warrantyExpiry: document.getElementById('warranty-expiry').value,
+          vendor: document.getElementById('vendor').value,
+          maintenanceFrequency: document.getElementById('maintenance-frequency').value,
+          lastMaintenance: document.getElementById('last-maintenance').value,
+          maintenanceInstructions: document.getElementById('maintenance-instructions').value,
+          calibrationFrequency: document.getElementById('calibration-frequency').value,
+          lastCalibration: document.getElementById('last-calibration').value,
+          calibrationProcedure: document.getElementById('calibration-procedure').value,
+          currentQuantity: document.getElementById('current-quantity').value,
+          minimumQuantity: document.getElementById('minimum-quantity').value,
+          storageLocation: document.getElementById('storage-location').value,
+          specifications: document.getElementById('specifications').value,
+          notes: document.getElementById('notes').value,
+          criticalAsset: document.getElementById('critical-asset').checked,
+          requiresSpecialTools: document.getElementById('requires-special-tools').checked,
+          safetyHazard: document.getElementById('safety-hazard').checked,
+          creationDate: new Date().toISOString()
+        };
+        
+        // Only check for incomplete optional fields
+        // We don't need to check required fields as they're handled by HTML5 validation
+        
+        // Check if any optional fields are empty based on asset type
+        let incompleteFields = [];
+        
+        // Common fields for all asset types
+        if(!asset.location) incompleteFields.push("Location");
+        if(!asset.department) incompleteFields.push("Department");
+        if(!asset.manufacturer) incompleteFields.push("Manufacturer");
+        if(!asset.model) incompleteFields.push("Model");
+        if(!asset.serialNumber) incompleteFields.push("Serial Number");
+        if(!asset.purchaseDate) incompleteFields.push("Purchase Date");
+        if(!asset.warrantyExpiry) incompleteFields.push("Warranty Expiry");
+        if(!asset.vendor) incompleteFields.push("Vendor");
+        if(!asset.specifications) incompleteFields.push("Specifications");
+        if(!asset.notes) incompleteFields.push("Notes");
+        
+        // Asset type specific fields
+        if(asset.assetType === 'equipment' && !asset.maintenanceFrequency) 
+          incompleteFields.push("Maintenance Frequency");
+        if(asset.assetType === 'equipment' && !asset.lastMaintenance) 
+          incompleteFields.push("Last Maintenance");
+        if(asset.assetType === 'equipment' && !asset.maintenanceInstructions) 
+          incompleteFields.push("Maintenance Instructions");
+        
+        // If we found incomplete fields, show confirmation
+        if (incompleteFields.length > 0) {
+          console.log('Incomplete fields detected:', incompleteFields);
+          
+          // Show confirmation dialog with specific fields listed
+          const confirmMessage = `The following optional fields are incomplete:\n- ${incompleteFields.join('\n- ')}\n\nDo you want to continue with partial data?`;
+          const confirmSubmit = confirm(confirmMessage);
+          
+          console.log('User confirmation:', confirmSubmit);
+          if (!confirmSubmit) {
+            console.log('User canceled form submission');
+            return; // User chose to cancel and complete the form
+          }
+          console.log('Proceeding with incomplete data');
+        }
+        
+        // Save to localStorage
+        let assets = JSON.parse(localStorage.getItem('assets') || '[]');
+        assets.push(asset);
+        localStorage.setItem('assets', JSON.stringify(assets));
+        
+        // In a real app, this would be sent to the server/backend
+        console.log('Asset registered:', asset);
+        
+        // Show success message
+        document.getElementById('success-message').style.display = 'block';
+        
+        // Reset form
+        setTimeout(() => {
+          document.getElementById('asset-registration-form').reset();
+          document.getElementById('success-message').style.display = 'none';
+          
+          // Reset tabs
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          document.querySelector('.tab[data-tab="equipment"]').classList.add('active');
+          document.getElementById('equipment-tab').classList.add('active');
+          assetTypeInput.value = 'equipment';
+          
+          // Reset sections and categories
+          updateSections('equipment');
+          updateCategoryOptions('equipment');
+          
+          // Redirect back to asset management after a delay
+          setTimeout(() => {
+            window.location.href = '../asset-management.html';
+          }, 1000);
+        }, 2000);
+      });
+      
+      // Initialize sections
+      updateSections('equipment');
+      updateCategoryOptions('equipment');
+    });
+  </script>
+</body>
+</html>

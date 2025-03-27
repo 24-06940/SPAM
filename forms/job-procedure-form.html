@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Job Procedure - Preventive Maintenance Management System</title>
+  <link rel="stylesheet" href="../custom.css">
+  <style>
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .form-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #dadce0;
+    }
+    
+    .form-section {
+      margin-bottom: 24px;
+    }
+    
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 16px;
+    }
+    
+    .submit-button {
+      background-color: #1a73e8;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .submit-button:hover {
+      background-color: #1765cc;
+    }
+    
+    .cancel-button {
+      background-color: #f1f3f4;
+      color: #5f6368;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+    
+    .cancel-button:hover {
+      background-color: #e8eaed;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+    
+    .success-message {
+      background-color: #e6f4ea;
+      color: #0d652d;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #34a853;
+      display: none;
+    }
+    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -8px;
+    }
+    
+    .col {
+      padding: 0 8px;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .steps-container {
+      margin-top: 16px;
+    }
+    
+    .step-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 16px;
+    }
+    
+    .step-number {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a73e8;
+      flex-shrink: 0;
+      margin-right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #e8f0fe;
+    }
+    
+    .step-content {
+      flex-grow: 1;
+    }
+    
+    .step-field {
+      margin-bottom: 12px;
+    }
+    
+    .step-actions {
+      margin-left: 12px;
+    }
+    
+    .handle {
+      cursor: move;
+      color: #dadce0;
+    }
+    
+    .add-step-button {
+      display: inline-flex;
+      align-items: center;
+      background-color: #f1f3f4;
+      color: #1a73e8;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    
+    .add-step-button svg {
+      margin-right: 8px;
+    }
+    
+    .add-step-button:hover {
+      background-color: #e8eaed;
+    }
+    
+    .delete-step {
+      background: none;
+      border: none;
+      color: #ea4335;
+      cursor: pointer;
+    }
+    
+    .delete-step:hover {
+      color: #d93025;
+    }
+    
+    .checkbox-group {
+      margin-top: 16px;
+    }
+    
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    
+    .success-message {
+      background-color: #e6f4ea;
+      color: #0d652d;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #34a853;
+      display: none;
+    }
+    
+    .warning-message {
+      background-color: #fef7e0;
+      color: #b06000;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #f9ab00;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>Create Job Procedure</h1>
+    <a href="../job-procedures.html" class="secondary-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Job Procedures
+    </a>
+  </div>
+  
+  <div class="success-message" id="success-message">
+    <strong>Success!</strong> The job procedure has been created successfully.
+  </div>
+  
+  <div class="warning-message" id="warning-message">
+    <strong>Warning:</strong> Some fields are incomplete. The job procedure has been saved with partial data.
+  </div>
+  
+  <div class="form-container">
+    <h2 class="form-title">Job Procedure Information</h2>
+    
+    <form id="job-procedure-form">
+      <div class="form-section">
+        <div class="form-section-title">Basic Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="procedure-title" class="form-label">Procedure Title</label>
+              <input type="text" id="procedure-title" class="form-input" placeholder="Enter a descriptive title" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="procedure-type" class="form-label">Procedure Type</label>
+              <select id="procedure-type" class="form-select" required>
+                <option value="" disabled selected>Select procedure type</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Repair">Repair</option>
+                <option value="Installation">Installation</option>
+                <option value="Calibration">Calibration</option>
+                <option value="Inspection">Inspection</option>
+                <option value="Troubleshooting">Troubleshooting</option>
+                <option value="Safety">Safety</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="equipment-id" class="form-label">Equipment ID</label>
+              <input type="text" id="equipment-id" class="form-input" placeholder="Enter equipment ID" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="procedure-id" class="form-label">Procedure ID</label>
+              <input type="text" id="procedure-id" class="form-input" placeholder="Enter procedure ID (if applicable)">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Procedure Details</div>
+        
+        <div class="form-group">
+          <label for="description" class="form-label">Description</label>
+          <textarea id="description" class="form-textarea" placeholder="Enter a brief description of this procedure" required></textarea>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="estimated-duration" class="form-label">Estimated Duration (minutes)</label>
+              <input type="number" id="estimated-duration" class="form-input" placeholder="Enter time in minutes" min="1" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="skill-level" class="form-label">Required Skill Level</label>
+              <select id="skill-level" class="form-select" required>
+                <option value="" disabled selected>Select skill level</option>
+                <option value="Basic">Basic</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+                <option value="Expert">Expert</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="tools-required" class="form-label">Tools and Equipment Required</label>
+          <textarea id="tools-required" class="form-textarea" placeholder="List all tools and equipment needed"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="safety-precautions" class="form-label">Safety Precautions</label>
+          <textarea id="safety-precautions" class="form-textarea" placeholder="List all safety precautions that must be followed"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Procedure Steps</div>
+        <p>Add detailed step-by-step instructions for completing this procedure.</p>
+        
+        <div id="steps-container" class="steps-container">
+          <!-- Steps will be added here -->
+        </div>
+        
+        <button type="button" id="add-step" class="add-step-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add Step
+        </button>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Additional Information</div>
+        
+        <div class="form-group">
+          <label for="reference-documents" class="form-label">Reference Documents</label>
+          <textarea id="reference-documents" class="form-textarea" placeholder="List any reference documents or manuals that may be helpful"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="approver" class="form-label">Procedure Approver</label>
+          <input type="email" id="approver" class="form-input" placeholder="Enter approver's email address">
+        </div>
+        
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="requires-shutdown"> Equipment shutdown required
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="requires-lockout-tagout"> Lockout/Tagout required
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="requires-permit"> Special permits required
+          </label>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <a href="../job-procedures.html" class="cancel-button">Cancel</a>
+        <button type="submit" class="submit-button">Create Job Procedure</button>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const equipmentId = urlParams.get('equipmentId');
+    
+    // Set equipment ID if it was passed in the URL
+    if (equipmentId) {
+      document.getElementById('equipment-id').value = equipmentId;
+    }
+    
+    // Initialize step counter
+    let stepCount = 0;
+    
+    // Add first step when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      addStep();
+    });
+    
+    // Add step function
+    function addStep() {
+      stepCount++;
+      const stepsContainer = document.getElementById('steps-container');
+      const stepElement = document.createElement('div');
+      stepElement.className = 'step-row';
+      stepElement.id = `step-${stepCount}`;
+      
+      stepElement.innerHTML = `
+        <div class="step-number">${stepCount}</div>
+        <div class="step-content">
+          <div class="step-field">
+            <label class="form-label">Step Description</label>
+            <textarea class="form-textarea step-description" placeholder="Enter detailed instructions for this step" required></textarea>
+          </div>
+          <div class="step-field">
+            <label class="form-label">Expected Result</label>
+            <textarea class="form-textarea step-expected-result" placeholder="What should be observed or verified after completing this step?"></textarea>
+          </div>
+          <div class="step-field">
+            <label class="form-label">Warning/Caution (Optional)</label>
+            <textarea class="form-textarea step-warning" placeholder="Enter any warnings or special cautions for this step"></textarea>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="delete-step" onclick="deleteStep(${stepCount})">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      `;
+      
+      stepsContainer.appendChild(stepElement);
+    }
+    
+    // Delete step function
+    function deleteStep(stepId) {
+      if (stepCount <= 1) {
+        alert('A procedure must have at least one step.');
+        return;
+      }
+      
+      const stepElement = document.getElementById(`step-${stepId}`);
+      stepElement.remove();
+      
+      // Renumber the remaining steps
+      const steps = document.querySelectorAll('.step-row');
+      steps.forEach((step, index) => {
+        step.id = `step-${index + 1}`;
+        step.querySelector('.step-number').textContent = index + 1;
+        step.querySelector('.delete-step').setAttribute('onclick', `deleteStep(${index + 1})`);
+      });
+      
+      stepCount = steps.length;
+    }
+    
+    // Add event listener to "Add Step" button
+    document.getElementById('add-step').addEventListener('click', addStep);
+    
+    // Function to handle form submission
+    document.getElementById('job-procedure-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Collect step data
+      const steps = [];
+      document.querySelectorAll('.step-row').forEach((stepRow, index) => {
+        steps.push({
+          stepNumber: index + 1,
+          description: stepRow.querySelector('.step-description').value,
+          expectedResult: stepRow.querySelector('.step-expected-result').value,
+          warning: stepRow.querySelector('.step-warning').value
+        });
+      });
+      
+      // Create job procedure object
+      const jobProcedure = {
+        title: document.getElementById('procedure-title').value,
+        procedureType: document.getElementById('procedure-type').value,
+        equipmentId: document.getElementById('equipment-id').value,
+        procedureId: document.getElementById('procedure-id').value,
+        description: document.getElementById('description').value,
+        estimatedDuration: document.getElementById('estimated-duration').value,
+        skillLevel: document.getElementById('skill-level').value,
+        toolsRequired: document.getElementById('tools-required').value,
+        safetyPrecautions: document.getElementById('safety-precautions').value,
+        referenceDocuments: document.getElementById('reference-documents').value,
+        approver: document.getElementById('approver').value,
+        requiresShutdown: document.getElementById('requires-shutdown').checked,
+        requiresLockoutTagout: document.getElementById('requires-lockout-tagout').checked,
+        requiresPermit: document.getElementById('requires-permit').checked,
+        creationDate: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+        steps: steps
+      };
+      
+      // Generate a unique procedure ID if not provided
+      if (!jobProcedure.procedureId || jobProcedure.procedureId.trim() === '') {
+        const timestamp = new Date().getTime();
+        jobProcedure.procedureId = `JP-${timestamp}`;
+      }
+      
+      // Only check for incomplete optional fields
+      // HTML5 validation handles required fields
+      
+      // Check for empty optional fields and gather info
+      let incompleteFields = [];
+      
+      if (!jobProcedure.toolsRequired) incompleteFields.push("Tools Required");
+      if (!jobProcedure.safetyPrecautions) incompleteFields.push("Safety Precautions");
+      if (!jobProcedure.referenceDocuments) incompleteFields.push("Reference Documents");
+      if (!jobProcedure.approver) incompleteFields.push("Approver");
+      
+      // Check step expected results
+      let incompleteStepCount = 0;
+      steps.forEach((step, index) => {
+        if (!step.expectedResult || step.expectedResult.trim() === '') {
+          incompleteStepCount++;
+        }
+      });
+      
+      if (incompleteStepCount > 0) {
+        incompleteFields.push(`Expected Results missing for ${incompleteStepCount} step(s)`);
+      }
+      
+      // Check warning fields in steps (totally optional)
+      let missingWarningCount = 0;
+      steps.forEach((step, index) => {
+        if (!step.warning || step.warning.trim() === '') {
+          missingWarningCount++;
+        }
+      });
+      
+      if (missingWarningCount > 0 && missingWarningCount === steps.length) {
+        incompleteFields.push("No Warning/Caution notes added to any steps");
+      }
+      
+      // Check if we have any incomplete data
+      const hasIncompleteData = incompleteFields.length > 0;
+      
+      // Log for debugging
+      console.log('Job Procedure created:', jobProcedure);
+      
+      // For incomplete data - Ask the user if they want to continue
+      if (hasIncompleteData) {
+        console.log('Incomplete fields detected:', incompleteFields);
+        
+        // Show confirmation dialog with specific fields listed
+        const confirmMessage = `The following optional fields are incomplete:\n- ${incompleteFields.join('\n- ')}\n\nDo you want to continue with partial data?`;
+        const confirmSubmit = confirm(confirmMessage);
+        
+        console.log('User confirmation:', confirmSubmit);
+        if (!confirmSubmit) {
+          console.log('User canceled form submission');
+          return; // User chose to cancel and complete the form
+        }
+        console.log('Proceeding with incomplete data');
+      }
+      
+      // Save to localStorage
+      let procedures = JSON.parse(localStorage.getItem('jobProcedures') || '[]');
+      procedures.push(jobProcedure);
+      localStorage.setItem('jobProcedures', JSON.stringify(procedures));
+      
+      // Show success message
+      document.getElementById('success-message').style.display = 'block';
+      
+      // Reset form
+      setTimeout(() => {
+        document.getElementById('job-procedure-form').reset();
+        
+        // Clear steps
+        const stepsContainer = document.getElementById('steps-container');
+        stepsContainer.innerHTML = '';
+        stepCount = 0;
+        
+        // Add a fresh first step
+        addStep();
+        
+        // If equipment ID was provided in URL, keep it
+        if (equipmentId) {
+          document.getElementById('equipment-id').value = equipmentId;
+        }
+        
+        // Hide messages
+        document.getElementById('success-message').style.display = 'none';
+        document.getElementById('warning-message').style.display = 'none';
+        
+        // Redirect back to job procedures list after a delay
+        setTimeout(() => {
+          window.location.href = '../job-procedures.html';
+        }, 1000);
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

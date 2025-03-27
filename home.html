@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preventive Maintenance Management System</title>
+  <link rel="stylesheet" href="custom.css">
+  <style>
+    .hero-section {
+      background: linear-gradient(135deg, #552583, #2a1342); /* Lakers Purple Gradient */
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      border-bottom: 5px solid #FDB927; /* Lakers Gold */
+    }
+    
+    .hero-title {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto 30px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+    
+    .quick-access {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .quick-action-button {
+      background-color: white;
+      color: #552583; /* Lakers Purple */
+      font-weight: 500;
+      padding: 15px 25px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border-left: 3px solid #FDB927; /* Lakers Gold */
+    }
+    
+    .quick-action-button:hover {
+      background-color: #f8f6ff; /* Light purple tint */
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      border-left: 3px solid #FDB927; /* Lakers Gold */
+      color: #2a1342; /* Darker Purple */
+    }
+    
+    .quick-action-button svg {
+      margin-right: 10px;
+      fill: currentColor;
+    }
+    
+    .benefits-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      margin-bottom: 50px;
+    }
+    
+    .benefit-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 25px;
+      flex: 1;
+      min-width: 250px;
+      max-width: 350px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.3s;
+      border-top: 3px solid #FDB927; /* Lakers Gold */
+    }
+    
+    .benefit-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border-top: 3px solid #552583; /* Lakers Purple */
+    }
+    
+    .benefit-card svg {
+      width: 50px;
+      height: 50px;
+      stroke: #552583; /* Lakers Purple */
+      margin-bottom: 15px;
+    }
+    
+    .benefit-title {
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: #552583; /* Lakers Purple */
+    }
+    
+    .benefit-description {
+      color: #5f6368;
+      line-height: 1.5;
+    }
+    
+    .workflow-section {
+      background-color: white;
+      border-radius: 8px;
+      padding: 30px;
+      margin-bottom: 50px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-left: 4px solid #552583; /* Lakers Purple */
+    }
+    
+    .workflow-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #552583; /* Lakers Purple */
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .workflow-steps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      position: relative;
+      padding: 20px 0;
+    }
+    
+    .workflow-step {
+      flex: 1;
+      min-width: 150px;
+      text-align: center;
+      padding: 0 15px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .workflow-steps::after {
+      content: "";
+      position: absolute;
+      height: 2px;
+      background-color: #FDB927; /* Lakers Gold */
+      top: 50%;
+      left: 0;
+      right: 0;
+      z-index: 0;
+    }
+    
+    .step-number {
+      width: 50px;
+      height: 50px;
+      background-color: #552583; /* Lakers Purple */
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-weight: 500;
+      position: relative;
+      z-index: 2;
+      border: 2px solid #FDB927; /* Lakers Gold */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #FDB927; /* Lakers Gold */
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+    
+    .step-description {
+      font-size: 0.9rem;
+      color: #5f6368;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-section">
+    <h1 class="hero-title">Preventive Maintenance Management System</h1>
+    <p class="hero-subtitle">A comprehensive solution for engineers and technicians to efficiently manage maintenance tasks, equipment procedures, and calibration reports.</p>
+    
+    <div class="quick-access">
+      <a href="work-orders.html" class="quick-action-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+        Work Orders
+      </a>
+      <a href="job-procedures.html" class="quick-action-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Job Procedures
+      </a>
+      <a href="calibration-reports.html" class="quick-action-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        Calibration Reports
+      </a>
+      <a href="asset-management.html" class="quick-action-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M20 7h-7l-1-3.5c-.6-1-1.6-1.5-2.7-1.5H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"></path></svg>
+        Asset Management
+      </a>
+    </div>
+  </div>
+  
+  <div class="benefits-section">
+    <div class="benefit-card">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      <h3 class="benefit-title">Reduces Downtime</h3>
+      <p class="benefit-description">Proactively identify maintenance needs before equipment fails, minimizing unexpected downtime and keeping operations running smoothly.</p>
+    </div>
+    
+    <div class="benefit-card">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      <h3 class="benefit-title">Improves Equipment Reliability</h3>
+      <p class="benefit-description">Regular maintenance and proper documentation increase equipment lifespan and reliability, reducing the frequency of major repairs.</p>
+    </div>
+    
+    <div class="benefit-card">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+      <h3 class="benefit-title">Streamlines Processes</h3>
+      <p class="benefit-description">Centralized maintenance information and standardized procedures increase efficiency and ensure consistent quality in maintenance activities.</p>
+    </div>
+  </div>
+  
+  <div class="workflow-section">
+    <h2 class="workflow-title">Maintenance Workflow</h2>
+    
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-number">1</div>
+        <h4 class="step-title">Plan</h4>
+        <p class="step-description">Schedule preventive maintenance based on manufacturer recommendations and equipment history.</p>
+      </div>
+      
+      <div class="workflow-step">
+        <div class="step-number">2</div>
+        <h4 class="step-title">Execute</h4>
+        <p class="step-description">Follow documented procedures to perform maintenance tasks efficiently and safely.</p>
+      </div>
+      
+      <div class="workflow-step">
+        <div class="step-number">3</div>
+        <h4 class="step-title">Document</h4>
+        <p class="step-description">Record all maintenance activities, findings, and measurements for future reference.</p>
+      </div>
+      
+      <div class="workflow-step">
+        <div class="step-number">4</div>
+        <h4 class="step-title">Analyze</h4>
+        <p class="step-description">Review maintenance history to identify trends and improvement opportunities.</p>
+      </div>
+      
+      <div class="workflow-step">
+        <div class="step-number">5</div>
+        <h4 class="step-title">Improve</h4>
+        <p class="step-description">Optimize maintenance schedules and procedures based on data-driven insights.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="dashboard-preview">
+    <h2 style="color: #552583; border-bottom: 2px solid #FDB927; padding-bottom: 8px;">Recently Added Work Orders</h2>
+    <div id="recent-work-orders">
+      <p class="loading-message">Loading recent work orders...</p>
+    </div>
+    
+    <h2 style="color: #552583; border-bottom: 2px solid #FDB927; padding-bottom: 8px;">Upcoming Calibrations</h2>
+    <div id="upcoming-calibrations">
+      <p class="loading-message">Loading upcoming calibrations...</p>
+    </div>
+  </div>
+
+  <script>
+    // Load recent work orders
+    google.script.run
+      .withSuccessHandler(displayRecentWorkOrders)
+      .withFailureHandler(handleError)
+      .getWorkOrders({ sortBy: 'date', limit: 5 });
+    
+    // Load upcoming calibrations
+    google.script.run
+      .withSuccessHandler(displayUpcomingCalibrations)
+      .withFailureHandler(handleError)
+      .getUpcomingCalibrations(30);
+    
+    function displayRecentWorkOrders(workOrders) {
+      const container = document.getElementById('recent-work-orders');
+      
+      if (!workOrders || workOrders.length === 0) {
+        container.innerHTML = '<p>No recent work orders found.</p>';
+        return;
+      }
+      
+      let html = '<div class="data-table"><table>';
+      html += '<thead><tr><th>ID</th><th>Equipment</th><th>Type</th><th>Priority</th><th>Status</th></tr></thead>';
+      html += '<tbody>';
+      
+      workOrders.forEach(order => {
+        html += `<tr>
+          <td>${order.WorkOrderId}</td>
+          <td>${order.EquipmentId}</td>
+          <td>${order.MaintenanceType}</td>
+          <td><span class="priority-badge ${order.Priority.toLowerCase()}">${order.Priority}</span></td>
+          <td><span class="status-badge ${order.Status.toLowerCase().replace(' ', '-')}">${order.Status}</span></td>
+        </tr>`;
+      });
+      
+      html += '</tbody></table></div>';
+      html += '<a href="work-orders.html" class="view-all-link" style="color: #552583; font-weight: 600;">View All Work Orders &rarr;</a>';
+      
+      container.innerHTML = html;
+    }
+    
+    function displayUpcomingCalibrations(calibrations) {
+      const container = document.getElementById('upcoming-calibrations');
+      
+      if (!calibrations || calibrations.length === 0) {
+        container.innerHTML = '<p>No upcoming calibrations in the next 30 days.</p>';
+        return;
+      }
+      
+      let html = '<div class="data-table"><table>';
+      html += '<thead><tr><th>Instrument</th><th>Due Date</th><th>Days Until Due</th></tr></thead>';
+      html += '<tbody>';
+      
+      calibrations.forEach(cal => {
+        const dueDate = new Date(cal.NextCalibrationDate);
+        const today = new Date();
+        const daysUntilDue = Math.round((dueDate - today) / (1000 * 60 * 60 * 24));
+        
+        let dueDateClass = '';
+        if (daysUntilDue <= 7) dueDateClass = 'urgent';
+        else if (daysUntilDue <= 14) dueDateClass = 'warning';
+        
+        html += `<tr>
+          <td>${cal.InstrumentName} (${cal.InstrumentId})</td>
+          <td>${cal.NextCalibrationDate}</td>
+          <td class="${dueDateClass}">${daysUntilDue} days</td>
+        </tr>`;
+      });
+      
+      html += '</tbody></table></div>';
+      html += '<a href="calibration-reports.html" class="view-all-link" style="color: #552583; font-weight: 600;">View All Calibrations &rarr;</a>';
+      
+      container.innerHTML = html;
+    }
+    
+    function handleError(error) {
+      console.error('Error loading data:', error);
+      document.querySelectorAll('.loading-message').forEach(el => {
+        el.textContent = 'Error loading data. Please refresh the page to try again.';
+        el.style.color = '#FDB927'; /* Lakers Gold */
+        el.style.backgroundColor = '#552583'; /* Lakers Purple */
+        el.style.padding = '10px';
+        el.style.borderRadius = '4px';
+      });
+    }
+  </script>
+</body>
+</html>

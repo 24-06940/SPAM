@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support & Help - Preventive Maintenance Management System</title>
+  <link rel="stylesheet" href="custom.css">
+  <style>
+    .support-header {
+      margin-bottom: 30px;
+    }
+    
+    .support-tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #dadce0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .support-tab {
+      padding: 12px 24px;
+      font-weight: 500;
+      cursor: pointer;
+      color: #5f6368;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+    
+    .support-tab.active {
+      color: #1a73e8;
+      border-bottom-color: #1a73e8;
+    }
+    
+    .support-tab:hover:not(.active) {
+      color: #202124;
+      background-color: #f8f9fa;
+    }
+    
+    .support-content {
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+    
+    .support-content.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .user-manual-section {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+    }
+    
+    .manual-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: #202124;
+      margin-top: 0;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #dadce0;
+    }
+    
+    .manual-content {
+      line-height: 1.5;
+    }
+    
+    .manual-content h3 {
+      font-size: 16px;
+      color: #202124;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    
+    .manual-content ol, .manual-content ul {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+    
+    .manual-content li {
+      margin-bottom: 8px;
+    }
+    
+    .manual-content img {
+      max-width: 100%;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    
+    .manual-content code {
+      background-color: #f1f3f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 90%;
+    }
+    
+    .manual-content .note {
+      background-color: #e8f0fe;
+      border-left: 4px solid #1a73e8;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 4px;
+    }
+    
+    .manual-content .warning {
+      background-color: #fef7e0;
+      border-left: 4px solid #f9ab00;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 4px;
+    }
+    
+    .toc {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .toc-title {
+      font-weight: 500;
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #202124;
+    }
+    
+    .toc-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+    
+    .toc-list li {
+      margin-bottom: 8px;
+    }
+    
+    .toc-list a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    
+    .toc-list a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Video Tutorials */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .video-card {
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .video-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 8px rgba(60, 64, 67, 0.2);
+    }
+    
+    .video-thumbnail {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 aspect ratio */
+      background-color: #f1f3f4;
+      overflow: hidden;
+    }
+    
+    .video-thumbnail svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px;
+      height: 48px;
+      color: #5f6368;
+    }
+    
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .play-icon svg {
+      width: 30px;
+      height: 30px;
+      color: #ea4335;
+      position: static;
+      transform: none;
+      margin-left: 4px; /* Slight adjustment for the triangle shape */
+    }
+    
+    .video-info {
+      padding: 16px;
+    }
+    
+    .video-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #202124;
+      margin: 0 0 8px 0;
+    }
+    
+    .video-duration {
+      font-size: 12px;
+      color: #5f6368;
+      margin: 0;
+    }
+    
+    /* Contact & Support */
+    .contact-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .contact-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .contact-icon {
+      width: 48px;
+      height: 48px;
+      color: #1a73e8;
+      margin-bottom: 16px;
+    }
+    
+    .contact-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #202124;
+      margin: 0 0 10px 0;
+    }
+    
+    .contact-description {
+      color: #5f6368;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    
+    .contact-button {
+      background-color: #e8f0fe;
+      color: #1a73e8;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .contact-button:hover {
+      background-color: #d2e3fc;
+      text-decoration: none;
+    }
+    
+    /* FAQ */
+    .faq-section {
+      margin-bottom: 30px;
+    }
+    
+    .faq-category {
+      margin-bottom: 20px;
+    }
+    
+    .faq-category-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #dadce0;
+    }
+    
+    .faq-list {
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid #dadce0;
+    }
+    
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    
+    .faq-question {
+      padding: 16px;
+      font-weight: 500;
+      color: #202124;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+    
+    .faq-question:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .faq-question svg {
+      width: 20px;
+      height: 20px;
+      color: #5f6368;
+      transition: transform 0.3s;
+    }
+    
+    .faq-question.active svg {
+      transform: rotate(180deg);
+    }
+    
+    .faq-answer {
+      padding: 0 16px;
+      height: 0;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    
+    .faq-answer.active {
+      padding: 0 16px 16px;
+      height: auto;
+    }
+    
+    .faq-answer-content {
+      color: #5f6368;
+      line-height: 1.5;
+    }
+    
+    /* Feedback Form */
+    .feedback-form {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      margin-bottom: 30px;
+    }
+    
+    .feedback-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #202124;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-label {
+      display: block;
+      font-weight: 500;
+      color: #5f6368;
+      margin-bottom: 8px;
+    }
+    
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #202124;
+      font-family: inherit;
+    }
+    
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .form-button {
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 14px;
+      border: none;
+    }
+    
+    .form-submit {
+      background-color: #1a73e8;
+      color: white;
+    }
+    
+    .form-reset {
+      background-color: #f1f3f4;
+      color: #5f6368;
+    }
+    
+    /* Community Forum */
+    .forum-preview {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      margin-bottom: 30px;
+    }
+    
+    .forum-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #202124;
+      margin-top: 0;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .forum-title svg {
+      width: 24px;
+      height: 24px;
+      color: #1a73e8;
+    }
+    
+    .forum-description {
+      color: #5f6368;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    .forum-topics {
+      margin-bottom: 20px;
+    }
+    
+    .forum-topic {
+      display: flex;
+      padding: 12px 0;
+      border-bottom: 1px solid #dadce0;
+    }
+    
+    .forum-topic:last-child {
+      border-bottom: none;
+    }
+    
+    .topic-icon {
+      width: 24px;
+      height: 24px;
+      color: #1a73e8;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    
+    .topic-info {
+      flex: 1;
+    }
+    
+    .topic-title {
+      font-weight: 500;
+      color: #1a73e8;
+      margin: 0 0 4px 0;
+    }
+    
+    .topic-meta {
+      font-size: 12px;
+      color: #5f6368;
+    }
+    
+    .topic-stats {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      min-width: 100px;
+    }
+    
+    .topic-replies {
+      font-weight: 500;
+      color: #202124;
+    }
+    
+    .topic-last-reply {
+      font-size: 12px;
+      color: #5f6368;
+    }
+    
+    .visit-forum-button {
+      display: inline-block;
+      background-color: #1a73e8;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    
+    .visit-forum-button:hover {
+      background-color: #1765cc;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>Support & Help</h1>
+  </div>
+  
+  <div class="support-header">
+    <div class="support-tabs">
+      <div class="support-tab active" onclick="switchTab('user-manual')">User Manual</div>
+      <div class="support-tab" onclick="switchTab('video-tutorials')">Video Tutorials</div>
+    </div>
+  </div>
+  
+  <!-- User Manual -->
+  <div id="user-manual" class="support-content active">
+    <div class="toc">
+      <h3 class="toc-title">Contents</h3>
+      <ul class="toc-list">
+        <li><a href="#getting-started">Getting Started</a></li>
+        <li><a href="#work-orders">Work Orders Management</a></li>
+        <li><a href="#job-procedures">Job Procedures</a></li>
+        <li><a href="#calibration">Calibration Reports</a></li>
+        <li><a href="#asset-management">Asset Management</a></li>
+        <li><a href="#reporting">Reporting & Analytics</a></li>
+        <li><a href="#user-management">User Management</a></li>
+      </ul>
+    </div>
+    
+    <div id="getting-started" class="user-manual-section">
+      <h2 class="manual-title">Getting Started</h2>
+      <div class="manual-content">
+        <p>Welcome to the Preventive Maintenance Management System. This comprehensive system is designed to help engineers and technicians efficiently manage maintenance tasks, equipment procedures, and calibration reports.</p>
+        
+        <h3>System Overview</h3>
+        <p>The Preventive Maintenance Management System consists of several integrated modules:</p>
+        <ul>
+          <li><strong>Work Orders</strong> - Create, assign, and track maintenance tasks</li>
+          <li><strong>Job Procedures</strong> - Standardized maintenance procedures documentation</li>
+          <li><strong>Calibration Reports</strong> - Track instrument calibrations and certifications</li>
+          <li><strong>Asset Management</strong> - Inventory and status tracking of equipment</li>
+          <li><strong>Reporting & Analytics</strong> - Data-driven insights and custom reports</li>
+          <li><strong>User Management</strong> - Role-based access control and permissions</li>
+        </ul>
+        
+        <h3>Accessing the System</h3>
+        <p>The system is accessible through any web browser. For the best experience, we recommend using the latest version of Google Chrome, Mozilla Firefox, Microsoft Edge, or Safari.</p>
+        
+        <div class="note">
+          <p><strong>Note:</strong> Your system administrator will provide you with login credentials and the appropriate URL to access the system.</p>
+        </div>
+        
+        <h3>Navigation</h3>
+        <p>The main navigation is available through the tabs at the top of each page. The home page provides quick access buttons to critical functions and an overview of the system's key features.</p>
+      </div>
+    </div>
+    
+    <div id="work-orders" class="user-manual-section">
+      <h2 class="manual-title">Work Orders Management</h2>
+      <div class="manual-content">
+        <p>The Work Orders module allows you to create, assign, track, and complete maintenance tasks across your organization.</p>
+        
+        <h3>Creating a Work Order</h3>
+        <ol>
+          <li>Navigate to the Work Orders tab</li>
+          <li>Click the "Create Work Order" button</li>
+          <li>Fill in the required information:
+            <ul>
+              <li>Equipment ID - Select the asset requiring maintenance</li>
+              <li>Maintenance Type - Choose from Preventive, Corrective, Predictive, or Emergency</li>
+              <li>Priority - Set as Critical, High, Medium, or Low</li>
+              <li>Description - Detail the work to be performed</li>
+              <li>Assigned To - Email of the responsible technician</li>
+              <li>Due Date - When the work should be completed</li>
+            </ul>
+          </li>
+          <li>Submit the form to create the work order</li>
+        </ol>
+        
+        <h3>Filtering Work Orders</h3>
+        <p>Use the filter section at the top of the Work Orders page to narrow down the list by:</p>
+        <ul>
+          <li>Status (Open, In Progress, On Hold, Completed)</li>
+          <li>Priority (Critical, High, Medium, Low)</li>
+          <li>Maintenance Type</li>
+          <li>Date Range</li>
+          <li>Assigned Technician</li>
+        </ul>
+        
+        <h3>Updating Work Order Status</h3>
+        <ol>
+          <li>Find the work order in the list</li>
+          <li>Click the "Update" button</li>
+          <li>Select the new status from the dropdown</li>
+          <li>If marking as "Completed", enter the completion date</li>
+          <li>Save the changes</li>
+        </ol>
+        
+        <div class="warning">
+          <p><strong>Important:</strong> Critical and High priority work orders will automatically generate email notifications to responsible personnel.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="job-procedures" class="user-manual-section">
+      <h2 class="manual-title">Job Procedures</h2>
+      <div class="manual-content">
+        <p>The Job Procedures module provides standardized documentation for maintenance tasks to ensure consistency and quality.</p>
+        
+        <h3>Creating a Job Procedure</h3>
+        <ol>
+          <li>Navigate to the Job Procedures tab</li>
+          <li>Click the "Create Procedure" button</li>
+          <li>Fill in the procedure information:
+            <ul>
+              <li>Equipment ID - Associated asset</li>
+              <li>Procedure Title - Descriptive name</li>
+              <li>Safety Protocol - Important safety warnings and requirements</li>
+              <li>Required Tools - List tools and equipment needed</li>
+              <li>Procedure Steps - Step-by-step instructions</li>
+              <li>Expected Outcome - Successful completion criteria</li>
+              <li>Troubleshooting - Common issues and solutions</li>
+            </ul>
+          </li>
+          <li>Submit the form to create the procedure</li>
+        </ol>
+        
+        <h3>Viewing and Printing Procedures</h3>
+        <p>To view or print a job procedure:</p>
+        <ol>
+          <li>Find the procedure in the list or use the search function</li>
+          <li>Click the "View" button to open the detailed view</li>
+          <li>Use the "Print Procedure" button to generate a printable version</li>
+        </ol>
+        
+        <h3>Searching Procedures</h3>
+        <p>Use the search bar at the top of the Job Procedures page to find procedures by name, equipment, or content. You can also filter by equipment using the dropdown filter.</p>
+      </div>
+    </div>
+    
+    <div id="calibration" class="user-manual-section">
+      <h2 class="manual-title">Calibration Reports</h2>
+      <div class="manual-content">
+        <p>The Calibration Reports module helps track instrument calibrations, due dates, and certification status.</p>
+        
+        <h3>Adding a Calibration Report</h3>
+        <ol>
+          <li>Navigate to the Calibration Reports tab</li>
+          <li>Click the "Add Calibration Report" button</li>
+          <li>Enter the calibration information:
+            <ul>
+              <li>Instrument ID - Unique identifier</li>
+              <li>Instrument Name - Descriptive name</li>
+              <li>Calibrated By - Person who performed the calibration</li>
+              <li>Next Calibration Due Date - When recalibration is needed</li>
+              <li>Tolerance Range - Acceptable measurement range</li>
+              <li>Certification Status - Valid, Pending, or Expired</li>
+              <li>Comments - Additional notes or observations</li>
+            </ul>
+          </li>
+          <li>Submit the form to add the calibration report</li>
+        </ol>
+        
+        <h3>Tracking Calibration Status</h3>
+        <p>The system automatically tracks calibration due dates and provides:</p>
+        <ul>
+          <li>Visual indicators for approaching and overdue calibrations</li>
+          <li>Alerts for instruments due for calibration in the next 7 days</li>
+          <li>Filtering options to view instruments by certification status</li>
+        </ul>
+        
+        <h3>Viewing Calibration History</h3>
+        <p>To view the calibration history for an instrument:</p>
+        <ol>
+          <li>Find the instrument in the list</li>
+          <li>Click the history icon</li>
+          <li>Review the complete calibration history</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div id="asset-management" class="user-manual-section">
+      <h2 class="manual-title">Asset Management</h2>
+      <div class="manual-content">
+        <p>The Asset Management module provides a comprehensive inventory of equipment with status tracking and maintenance history.</p>
+        
+        <h3>Registering a New Asset</h3>
+        <ol>
+          <li>Navigate to the Asset Management tab</li>
+          <li>Click the "Register New Asset" button</li>
+          <li>Enter the asset information:
+            <ul>
+              <li>Equipment Name - Descriptive name</li>
+              <li>Model Number - Manufacturer's model</li>
+              <li>Manufacturer - Equipment maker</li>
+              <li>Serial Number - Unique identifier</li>
+              <li>Purchase Date - Acquisition date</li>
+              <li>Location - Physical location</li>
+              <li>Department - Responsible department</li>
+              <li>Status - Active, Maintenance, Inactive, or Out of Service</li>
+            </ul>
+          </li>
+          <li>Submit the form to register the asset</li>
+        </ol>
+        
+        <h3>Updating Asset Status</h3>
+        <ol>
+          <li>Find the asset in the list</li>
+          <li>Click the "View" button to open the detailed view</li>
+          <li>Click "Update Status"</li>
+          <li>Select the new status and save</li>
+        </ol>
+        
+        <h3>Viewing Asset Maintenance History</h3>
+        <p>The detailed view of an asset includes its maintenance history, showing all work orders associated with the equipment.</p>
+        
+        <h3>Creating a Work Order for an Asset</h3>
+        <p>To quickly create a work order for an asset:</p>
+        <ol>
+          <li>Find the asset in the list</li>
+          <li>Click the "Create Work Order" button</li>
+          <li>The work order form will open with the equipment ID pre-filled</li>
+          <li>Complete the remaining information and submit</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div id="reporting" class="user-manual-section">
+      <h2 class="manual-title">Reporting & Analytics</h2>
+      <div class="manual-content">
+        <p>The Reporting & Analytics module provides data-driven insights and custom report generation capabilities.</p>
+        
+        <h3>Standard Reports</h3>
+        <p>The following standard reports are available:</p>
+        <ul>
+          <li><strong>Work Order Status Report</strong> - Summary of work orders by status, priority, and completion rate</li>
+          <li><strong>Calibration Due Report</strong> - Instruments due for calibration in a specified date range</li>
+          <li><strong>Asset Performance Report</strong> - Equipment maintenance trends and potential issues</li>
+          <li><strong>Department Asset Report</strong> - Asset allocation and status by department</li>
+        </ul>
+        
+        <h3>Generating Custom Reports</h3>
+        <ol>
+          <li>In the Reporting tab, scroll to the "Custom Report Generator" section</li>
+          <li>Select the report parameters:
+            <ul>
+              <li>Report Type - Work Orders, Calibrations, or Assets</li>
+              <li>Date Range - Period to analyze</li>
+              <li>Group By - How to organize the data</li>
+              <li>Format - Spreadsheet or PDF</li>
+            </ul>
+          </li>
+          <li>Click "Generate Custom Report"</li>
+          <li>The system will generate and display a link to your report</li>
+        </ol>
+        
+        <h3>Analytics Dashboard</h3>
+        <p>The analytics section displays visual representations of key performance indicators:</p>
+        <ul>
+          <li>Work Order Completion Time - Average days to complete work orders</li>
+          <li>Work Order Status Distribution - Breakdown of current work order statuses</li>
+          <li>Asset Status Overview - Distribution of asset status categories</li>
+          <li>Maintenance Types by Month - Trend of different maintenance activities</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div id="user-management" class="user-manual-section">
+      <h2 class="manual-title">User Management</h2>
+      <div class="manual-content">
+        <p>The User Management module controls access to the system through role-based permissions.</p>
+        
+        <h3>User Roles</h3>
+        <p>The system has four defined roles with different permission levels:</p>
+        <ul>
+          <li><strong>Administrator</strong> - Full access to all system functions and settings</li>
+          <li><strong>Maintenance Manager</strong> - Can manage work orders, procedures, assets, and reports</li>
+          <li><strong>Technician</strong> - Can view and update work orders assigned to them, view procedures and assets</li>
+          <li><strong>Viewer</strong> - Read-only access to work orders, procedures, and assets</li>
+        </ul>
+        
+        <h3>Adding a New User</h3>
+        <div class="note">
+          <p><strong>Note:</strong> Only Administrators can add new users.</p>
+        </div>
+        
+        <ol>
+          <li>Navigate to the User Management tab</li>
+          <li>Click the "Add User" button</li>
+          <li>Enter the user information:
+            <ul>
+              <li>Full Name</li>
+              <li>Email Address</li>
+              <li>Role</li>
+              <li>Department</li>
+              <li>Notifications Preference</li>
+            </ul>
+          </li>
+          <li>Submit the form to add the user</li>
+        </ol>
+        
+        <h3>Editing User Details</h3>
+        <ol>
+          <li>Find the user in the list</li>
+          <li>Click the "Edit" button</li>
+          <li>Update the necessary information</li>
+          <li>Save the changes</li>
+        </ol>
+        
+        <h3>Filtering Users</h3>
+        <p>Use the filter controls at the top of the User Management page to filter users by role, department, or search by name or email.</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Video Tutorials -->
+  <div id="video-tutorials" class="support-content">
+    <h2>Video Tutorials</h2>
+    <p>Learn how to use the Preventive Maintenance Management System with our step-by-step video tutorials.</p>
+    
+    <div class="video-grid">
+      <div class="video-card">
+        <div class="video-thumbnail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <div class="play-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">Getting Started with the System</h3>
+          <p class="video-duration">6:42 minutes</p>
+        </div>
+      </div>
+      
+      <div class="video-card">
+        <div class="video-thumbnail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <div class="play-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">Creating and Managing Work Orders</h3>
+          <p class="video-duration">8:15 minutes</p>
+        </div>
+      </div>
+      
+      <div class="video-card">
+        <div class="video-thumbnail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <div class="play-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">Documenting Job Procedures</h3>
+          <p class="video-duration">5:33 minutes</p>
+        </div>
+      </div>
+      
+      <div class="video-card">
+        <div class="video-thumbnail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <div class="play-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">Managing Calibration Reports</h3>
+          <p class="video-duration">7:10 minutes</p>
+        </div>
+      </div>
+      
+      <div class="video-card">
+        <div class="video-thumbnail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <div class="play-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">Asset Management Basics</h3>
+          <p class="video-duration">6:25 minutes</p>
+        </div>
+      </div>
+      
+      <div class="video-card">
+        <div class="video-thumbnail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <div class="play-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">Generating Reports and Analytics</h3>
+          <p class="video-duration">9:17 minutes</p>
+        </div>
+      </div>
+      
+      <div class="video-card">
+        <div class="video-thumbnail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <div class="play-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">Advanced Features for Administrators</h3>
+          <p class="video-duration">10:43 minutes</p>
+        </div>
+      </div>
+      
+      <div class="video-card">
+        <div class="video-thumbnail">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <div class="play-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">Best Practices for Preventive Maintenance</h3>
+          <p class="video-duration">12:05 minutes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

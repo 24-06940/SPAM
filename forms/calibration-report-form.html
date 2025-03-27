@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Calibration Report - Preventive Maintenance Management System</title>
+  <link rel="stylesheet" href="../custom.css">
+  <style>
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .form-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #dadce0;
+    }
+    
+    .form-section {
+      margin-bottom: 24px;
+    }
+    
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 16px;
+    }
+    
+    .submit-button {
+      background-color: #1a73e8;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .submit-button:hover {
+      background-color: #1765cc;
+    }
+    
+    .cancel-button {
+      background-color: #f1f3f4;
+      color: #5f6368;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+    
+    .cancel-button:hover {
+      background-color: #e8eaed;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+    
+    .success-message {
+      background-color: #e6f4ea;
+      color: #0d652d;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #34a853;
+      display: none;
+    }
+    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -8px;
+    }
+    
+    .col {
+      padding: 0 8px;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .calibration-point-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 16px;
+    }
+    
+    .point-number {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a73e8;
+      flex-shrink: 0;
+      margin-right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #e8f0fe;
+    }
+    
+    .point-content {
+      flex-grow: 1;
+    }
+    
+    .point-field {
+      margin-bottom: 12px;
+    }
+    
+    .point-actions {
+      margin-left: 12px;
+    }
+    
+    .add-point-button {
+      display: inline-flex;
+      align-items: center;
+      background-color: #f1f3f4;
+      color: #1a73e8;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    
+    .add-point-button svg {
+      margin-right: 8px;
+    }
+    
+    .add-point-button:hover {
+      background-color: #e8eaed;
+    }
+    
+    .delete-point {
+      background: none;
+      border: none;
+      color: #ea4335;
+      cursor: pointer;
+    }
+    
+    .delete-point:hover {
+      color: #d93025;
+    }
+    
+    .file-upload {
+      margin-top: 8px;
+    }
+    
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    
+    .radio-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .radio-label input[type="radio"] {
+      margin-right: 8px;
+    }
+    
+    .success-message {
+      background-color: #e6f4ea;
+      color: #0d652d;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #34a853;
+      display: none;
+    }
+    
+    .warning-message {
+      background-color: #fef7e0;
+      color: #b06000;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #f9ab00;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>Create Calibration Report</h1>
+    <a href="../calibration-reports.html" class="secondary-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Calibration Reports
+    </a>
+  </div>
+  
+  <div class="success-message" id="success-message">
+    <strong>Success!</strong> The calibration report has been created successfully.
+  </div>
+  
+  <div class="warning-message" id="warning-message">
+    <strong>Warning:</strong> Some fields are incomplete. The calibration report has been saved with partial data.
+  </div>
+  
+  <div class="form-container">
+    <h2 class="form-title">Calibration Report Information</h2>
+    
+    <form id="calibration-report-form">
+      <div class="form-section">
+        <div class="form-section-title">Instrument Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="instrument-id" class="form-label">Instrument ID</label>
+              <input type="text" id="instrument-id" class="form-input" placeholder="Enter instrument ID" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="instrument-type" class="form-label">Instrument Type</label>
+              <select id="instrument-type" class="form-select" required>
+                <option value="" disabled selected>Select instrument type</option>
+                <option value="Pressure Gauge">Pressure Gauge</option>
+                <option value="Temperature Sensor">Temperature Sensor</option>
+                <option value="Flow Meter">Flow Meter</option>
+                <option value="Level Indicator">Level Indicator</option>
+                <option value="pH Meter">pH Meter</option>
+                <option value="Conductivity Meter">Conductivity Meter</option>
+                <option value="Weighing Scale">Weighing Scale</option>
+                <option value="Multimeter">Multimeter</option>
+                <option value="Caliper">Caliper</option>
+                <option value="Micrometer">Micrometer</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="manufacturer" class="form-label">Manufacturer</label>
+              <input type="text" id="manufacturer" class="form-input" placeholder="Enter manufacturer name">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="model-number" class="form-label">Model Number</label>
+              <input type="text" id="model-number" class="form-input" placeholder="Enter model number">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="serial-number" class="form-label">Serial Number</label>
+              <input type="text" id="serial-number" class="form-input" placeholder="Enter serial number">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="location" class="form-label">Location</label>
+              <input type="text" id="location" class="form-input" placeholder="Enter instrument location">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Calibration Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="calibration-date" class="form-label">Calibration Date</label>
+              <input type="date" id="calibration-date" class="form-input" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="next-due-date" class="form-label">Next Calibration Due</label>
+              <input type="date" id="next-due-date" class="form-input" required>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="calibrated-by" class="form-label">Calibrated By</label>
+              <input type="text" id="calibrated-by" class="form-input" placeholder="Enter name of technician" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="approved-by" class="form-label">Approved By</label>
+              <input type="text" id="approved-by" class="form-input" placeholder="Enter name of approver">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="calibration-method" class="form-label">Calibration Method/Procedure</label>
+          <textarea id="calibration-method" class="form-textarea" placeholder="Describe the calibration method used"></textarea>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="reference-standard" class="form-label">Reference Standard/Equipment Used</label>
+              <input type="text" id="reference-standard" class="form-input" placeholder="Enter reference standards used">
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="reference-id" class="form-label">Reference Standard ID</label>
+              <input type="text" id="reference-id" class="form-input" placeholder="Enter reference standard ID">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="environmental-conditions" class="form-label">Environmental Conditions</label>
+          <textarea id="environmental-conditions" class="form-textarea" placeholder="Describe environmental conditions during calibration (temperature, humidity, etc.)"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Calibration Results</div>
+        
+        <div class="form-group">
+          <label class="form-label">Calibration Outcome</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="calibration-result" value="Pass" checked> Pass
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="calibration-result" value="Fail"> Fail
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="calibration-result" value="Adjustment Required"> Adjustment Required
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="calibration-notes" class="form-label">Calibration Notes</label>
+          <textarea id="calibration-notes" class="form-textarea" placeholder="Enter any additional notes about the calibration"></textarea>
+        </div>
+        
+        <div id="calibration-points-container">
+          <h4>Calibration Points</h4>
+          <p>Record calibration measurements at each test point.</p>
+          
+          <div id="points-container">
+            <!-- Calibration points will be added here -->
+          </div>
+          
+          <button type="button" id="add-point" class="add-point-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add Calibration Point
+          </button>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Additional Information</div>
+        
+        <div class="form-group">
+          <label for="attachments" class="form-label">Attachments (Certificates, Photos, etc.)</label>
+          <input type="file" id="attachments" class="file-upload" multiple>
+        </div>
+        
+        <div class="form-group">
+          <label for="comments" class="form-label">Comments</label>
+          <textarea id="comments" class="form-textarea" placeholder="Any additional comments or observations"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <a href="../calibration-reports.html" class="cancel-button">Cancel</a>
+        <button type="submit" class="submit-button">Submit Calibration Report</button>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const instrumentId = urlParams.get('instrumentId');
+    
+    // Set instrument ID if it was passed in the URL
+    if (instrumentId) {
+      document.getElementById('instrument-id').value = instrumentId;
+    }
+    
+    // Set default dates
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set today's date for calibration date
+      const today = new Date();
+      document.getElementById('calibration-date').valueAsDate = today;
+      
+      // Set default next due date (1 year from today)
+      const nextYear = new Date();
+      nextYear.setFullYear(nextYear.getFullYear() + 1);
+      document.getElementById('next-due-date').valueAsDate = nextYear;
+      
+      // Add first calibration point
+      addCalibrationPoint();
+      
+      // Hide messages on load
+      document.getElementById('success-message').style.display = 'none';
+      document.getElementById('warning-message').style.display = 'none';
+    });
+    
+    // Initialize point counter
+    let pointCount = 0;
+    
+    // Add calibration point function
+    function addCalibrationPoint() {
+      pointCount++;
+      const pointsContainer = document.getElementById('points-container');
+      const pointElement = document.createElement('div');
+      pointElement.className = 'calibration-point-row';
+      pointElement.id = `point-${pointCount}`;
+      
+      pointElement.innerHTML = `
+        <div class="point-number">${pointCount}</div>
+        <div class="point-content">
+          <div class="row">
+            <div class="col">
+              <div class="point-field">
+                <label class="form-label">Test Point</label>
+                <input type="text" class="form-input test-point" placeholder="Enter test point (e.g., 0 psi, 100°C)">
+              </div>
+            </div>
+            <div class="col">
+              <div class="point-field">
+                <label class="form-label">Standard Reading</label>
+                <input type="text" class="form-input standard-reading" placeholder="Enter standard/reference reading">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="point-field">
+                <label class="form-label">Instrument Reading (As Found)</label>
+                <input type="text" class="form-input as-found-reading" placeholder="Enter reading before adjustment">
+              </div>
+            </div>
+            <div class="col">
+              <div class="point-field">
+                <label class="form-label">Instrument Reading (As Left)</label>
+                <input type="text" class="form-input as-left-reading" placeholder="Enter reading after adjustment">
+              </div>
+            </div>
+          </div>
+          <div class="point-field">
+            <label class="form-label">Deviation/Error</label>
+            <input type="text" class="form-input deviation" placeholder="Enter deviation or calculated error">
+          </div>
+        </div>
+        <div class="point-actions">
+          <button type="button" class="delete-point" onclick="deleteCalibrationPoint(${pointCount})">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      `;
+      
+      pointsContainer.appendChild(pointElement);
+    }
+    
+    // Delete calibration point function
+    function deleteCalibrationPoint(pointId) {
+      if (pointCount <= 1) {
+        alert('At least one calibration point is required.');
+        return;
+      }
+      
+      const pointElement = document.getElementById(`point-${pointId}`);
+      pointElement.remove();
+      
+      // Renumber the remaining points
+      const points = document.querySelectorAll('.calibration-point-row');
+      points.forEach((point, index) => {
+        point.id = `point-${index + 1}`;
+        point.querySelector('.point-number').textContent = index + 1;
+        point.querySelector('.delete-point').setAttribute('onclick', `deleteCalibrationPoint(${index + 1})`);
+      });
+      
+      pointCount = points.length;
+    }
+    
+    // Add event listener to "Add Calibration Point" button
+    document.getElementById('add-point').addEventListener('click', addCalibrationPoint);
+    
+    // Function to handle form submission
+    document.getElementById('calibration-report-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Collect calibration point data
+      const calibrationPoints = [];
+      document.querySelectorAll('.calibration-point-row').forEach((pointRow, index) => {
+        calibrationPoints.push({
+          pointNumber: index + 1,
+          testPoint: pointRow.querySelector('.test-point').value,
+          standardReading: pointRow.querySelector('.standard-reading').value,
+          asFoundReading: pointRow.querySelector('.as-found-reading').value,
+          asLeftReading: pointRow.querySelector('.as-left-reading').value,
+          deviation: pointRow.querySelector('.deviation').value
+        });
+      });
+      
+      // Get selected calibration result
+      const calibrationResult = document.querySelector('input[name="calibration-result"]:checked').value;
+      
+      // Create calibration report object
+      const calibrationReport = {
+        instrumentId: document.getElementById('instrument-id').value,
+        instrumentType: document.getElementById('instrument-type').value,
+        manufacturer: document.getElementById('manufacturer').value,
+        modelNumber: document.getElementById('model-number').value,
+        serialNumber: document.getElementById('serial-number').value,
+        location: document.getElementById('location').value,
+        calibrationDate: document.getElementById('calibration-date').value,
+        nextDueDate: document.getElementById('next-due-date').value,
+        calibratedBy: document.getElementById('calibrated-by').value,
+        approvedBy: document.getElementById('approved-by').value,
+        calibrationMethod: document.getElementById('calibration-method').value,
+        referenceStandard: document.getElementById('reference-standard').value,
+        referenceId: document.getElementById('reference-id').value,
+        environmentalConditions: document.getElementById('environmental-conditions').value,
+        calibrationResult: calibrationResult,
+        calibrationNotes: document.getElementById('calibration-notes').value,
+        comments: document.getElementById('comments').value,
+        calibrationPoints: calibrationPoints,
+        reportId: generateReportId(),
+        creationDate: new Date().toISOString()
+      };
+      
+      // Only check for incomplete optional fields
+      // HTML5 validation handles required fields
+      
+      // Check for empty optional fields and gather info
+      let incompleteFields = [];
+      
+      if (!calibrationReport.manufacturer) incompleteFields.push("Manufacturer");
+      if (!calibrationReport.modelNumber) incompleteFields.push("Model Number");
+      if (!calibrationReport.serialNumber) incompleteFields.push("Serial Number");
+      if (!calibrationReport.location) incompleteFields.push("Location");
+      if (!calibrationReport.approvedBy) incompleteFields.push("Approved By");
+      if (!calibrationReport.calibrationMethod) incompleteFields.push("Calibration Method");
+      if (!calibrationReport.referenceStandard) incompleteFields.push("Reference Standard");
+      if (!calibrationReport.referenceId) incompleteFields.push("Reference ID");
+      if (!calibrationReport.environmentalConditions) incompleteFields.push("Environmental Conditions");
+      if (!calibrationReport.calibrationNotes) incompleteFields.push("Calibration Notes");
+      
+      // Check calibration points
+      let incompletePointCount = 0;
+      calibrationReport.calibrationPoints.forEach((point, index) => {
+        if (!point.testPoint || !point.standardReading || 
+            !point.asFoundReading || !point.asLeftReading || !point.deviation) {
+          incompletePointCount++;
+        }
+      });
+      
+      if (incompletePointCount > 0) {
+        incompleteFields.push(`${incompletePointCount} Calibration Point(s) incomplete`);
+      }
+      
+      // Check if we have any incomplete data
+      const hasIncompleteData = incompleteFields.length > 0;
+      
+      // For incomplete data - Ask the user if they want to continue
+      if (hasIncompleteData) {
+        console.log('Incomplete fields detected:', incompleteFields);
+        
+        // Show confirmation dialog with specific fields listed
+        const confirmMessage = `The following optional fields are incomplete:\n- ${incompleteFields.join('\n- ')}\n\nDo you want to continue with partial data?`;
+        const confirmSubmit = confirm(confirmMessage);
+        
+        console.log('User confirmation:', confirmSubmit);
+        if (!confirmSubmit) {
+          console.log('User canceled form submission');
+          return; // User chose to cancel and complete the form
+        }
+        console.log('Proceeding with incomplete data');
+      }
+      
+      // Save to localStorage
+      let calibrationReports = JSON.parse(localStorage.getItem('calibrationReports') || '[]');
+      calibrationReports.push(calibrationReport);
+      localStorage.setItem('calibrationReports', JSON.stringify(calibrationReports));
+      
+      // In a real app, this would be sent to the server/backend
+      console.log('Calibration Report created:', calibrationReport);
+      
+      // Show success message
+      document.getElementById('success-message').style.display = 'block';
+      
+      // Reset form
+      setTimeout(() => {
+        document.getElementById('calibration-report-form').reset();
+        
+        // Clear calibration points
+        const pointsContainer = document.getElementById('points-container');
+        pointsContainer.innerHTML = '';
+        pointCount = 0;
+        
+        // Add a fresh first calibration point
+        addCalibrationPoint();
+        
+        // If instrument ID was passed in URL, keep it
+        if (instrumentId) {
+          document.getElementById('instrument-id').value = instrumentId;
+        }
+        
+        // Reset dates
+        const today = new Date();
+        document.getElementById('calibration-date').valueAsDate = today;
+        
+        const nextYear = new Date();
+        nextYear.setFullYear(nextYear.getFullYear() + 1);
+        document.getElementById('next-due-date').valueAsDate = nextYear;
+        
+        // Hide messages
+        document.getElementById('success-message').style.display = 'none';
+        document.getElementById('warning-message').style.display = 'none';
+        
+        // Redirect back to calibration reports list after a delay
+        setTimeout(() => {
+          window.location.href = '../calibration-reports.html';
+        }, 1000);
+      }, 2000);
+    });
+    
+    // Generate a unique report ID
+    function generateReportId() {
+      const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+      return `CAL-${dateStr}-${random}`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPAM - System for Preventive and Automated Maintenance</title>
+    <style>
+        /* Lakers color scheme */
+        :root {
+          --primary-color: #552583; /* Lakers Purple */
+          --primary-dark: #2a1342; /* Darker Purple */
+          --secondary-color: #FDB927; /* Lakers Gold */
+          --secondary-dark: #dea01d; /* Darker Gold */
+          --accent-color: #dc3545; /* Red for warnings/errors */
+          --accent-dark: #bd2130;
+          --neutral-dark: #1e293b;
+          --neutral-medium: #475569;
+          --neutral-light: #cbd5e1;
+          --background-light: #f8f6ff; /* Light purple tint */
+          --background-white: #ffffff;
+          --success-bg: #fff3d9; /* Light gold for success */
+        }
+        
+        /* Base styles */
+        body {
+          font-family: 'Roboto', 'Arial', sans-serif;
+          line-height: 1.5;
+          color: var(--neutral-dark);
+          background-color: var(--background-light);
+          margin: 0;
+          padding: 0;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+          font-family: 'Arial', sans-serif;
+          margin-top: 0;
+          font-weight: 500;
+        }
+        
+        h1 {
+          font-size: 28px;
+          color: var(--primary-color);
+        }
+        
+        /* Navbar */
+        .navbar {
+          background-color: var(--primary-color);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .navbar-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 24px;
+        }
+        
+        .spam-logo {
+          font-size: 22px;
+          font-weight: 700;
+          color: white;
+          background-color: transparent;
+          padding: 4px 10px;
+          letter-spacing: 0.5px;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          text-transform: uppercase;
+          font-family: 'Arial Black', Arial, sans-serif;
+        }
+        
+        /* Container */
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 24px;
+        }
+        
+        /* Grid layout for home page */
+        .module-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 24px;
+          margin-top: 24px;
+        }
+        
+        .module-card {
+          background-color: var(--background-white);
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          padding: 24px;
+          text-align: center;
+          transition: transform 0.2s, box-shadow 0.2s;
+          border-top: 3px solid var(--secondary-color);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-decoration: none;
+          color: var(--neutral-dark);
+        }
+        
+        .module-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .module-icon {
+          background-color: var(--primary-color);
+          color: white;
+          width: 64px;
+          height: 64px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 16px;
+          font-size: 24px;
+        }
+        
+        .module-title {
+          font-size: 18px;
+          font-weight: 600;
+          margin-bottom: 8px;
+          color: var(--primary-color);
+        }
+        
+        .module-description {
+          font-size: 14px;
+          color: var(--neutral-medium);
+          margin-bottom: 16px;
+        }
+        
+        /* Hero section */
+        .hero {
+          background-color: var(--primary-color);
+          color: white;
+          padding: 48px 0;
+          margin-bottom: 48px;
+          text-align: center;
+          border-bottom: 4px solid var(--secondary-color);
+        }
+        
+        .hero-container {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 0 24px;
+        }
+        
+        .hero-title {
+          font-size: 36px;
+          margin-bottom: 16px;
+          color: white;
+          font-weight: 700;
+        }
+        
+        .hero-subtitle {
+          font-size: 18px;
+          opacity: 0.9;
+          margin-bottom: 24px;
+          max-width: 700px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        
+        /* Benefits section */
+        .benefits-section {
+          margin-bottom: 48px;
+        }
+        
+        .section-title {
+          text-align: center;
+          font-size: 24px;
+          margin-bottom: 32px;
+          color: var(--primary-color);
+        }
+        
+        .benefits-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 24px;
+        }
+        
+        .benefit-card {
+          background-color: var(--background-white);
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          padding: 24px;
+          border-left: 4px solid var(--secondary-color);
+        }
+        
+        .benefit-title {
+          font-size: 18px;
+          margin-bottom: 12px;
+          color: var(--primary-color);
+          display: flex;
+          align-items: center;
+        }
+        
+        .benefit-title span {
+          background-color: var(--secondary-color);
+          color: white;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 12px;
+          font-size: 14px;
+          font-weight: bold;
+        }
+        
+        .benefit-description {
+          color: var(--neutral-medium);
+          font-size: 14px;
+        }
+        
+        /* Workflow section */
+        .workflow-section {
+          margin-bottom: 48px;
+        }
+        
+        .workflow-steps {
+          display: flex;
+          justify-content: space-between;
+          position: relative;
+          max-width: 800px;
+          margin: 0 auto;
+        }
+        
+        .workflow-steps::before {
+          content: "";
+          position: absolute;
+          top: 35px;
+          left: 50px;
+          right: 50px;
+          height: 4px;
+          background-color: var(--secondary-color);
+          z-index: 0;
+        }
+        
+        .workflow-step {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 120px;
+          position: relative;
+          z-index: 1;
+        }
+        
+        .step-number {
+          width: 70px;
+          height: 70px;
+          border-radius: 50%;
+          background-color: var(--primary-color);
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 16px;
+          border: 3px solid var(--secondary-color);
+        }
+        
+        .step-name {
+          text-align: center;
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--primary-color);
+        }
+        
+        /* Footer */
+        .footer {
+          background-color: var(--primary-color);
+          color: white;
+          padding: 48px 0 24px;
+          margin-top: 48px;
+          border-top: 4px solid var(--secondary-color);
+        }
+        
+        .footer-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 24px;
+        }
+        
+        .footer-bottom {
+          text-align: center;
+          margin-top: 24px;
+          padding-top: 24px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+          .workflow-steps {
+            flex-direction: column;
+            align-items: center;
+          }
+          
+          .workflow-steps::before {
+            top: 35px;
+            bottom: 35px;
+            left: 50%;
+            right: auto;
+            width: 4px;
+            height: auto;
+          }
+          
+          .workflow-step {
+            margin-bottom: 32px;
+          }
+          
+          .module-grid, .benefits-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="spam-logo">SPAM</div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1 class="hero-title">System for Preventive and Automated Maintenance</h1>
+            <p class="hero-subtitle">Streamline your maintenance operations with our comprehensive paperless system. Manage work orders, checklists, asset data, and calibration records in one place.</p>
+        </div>
+    </section>
+    
+    <div class="container">
+        <!-- Module Grid -->
+        <div class="module-grid">
+            <a href="#" class="module-card">
+                <div class="module-icon">✓</div>
+                <h3 class="module-title">Work Orders</h3>
+                <p class="module-description">Create, track, and manage maintenance work orders across your organization.</p>
+            </a>
+            
+            <a href="#" class="module-card">
+                <div class="module-icon">☰</div>
+                <h3 class="module-title">Checklists</h3>
+                <p class="module-description">Standardize inspections with customizable maintenance checklists and templates.</p>
+            </a>
+            
+            <a href="#" class="module-card">
+                <div class="module-icon">📋</div>
+                <h3 class="module-title">Job Procedures</h3>
+                <p class="module-description">Document and access step-by-step maintenance procedures and guides.</p>
+            </a>
+            
+            <a href="#" class="module-card">
+                <div class="module-icon">📊</div>
+                <h3 class="module-title">Calibration Reports</h3>
+                <p class="module-description">Track instrument calibrations and maintain detailed calibration histories.</p>
+            </a>
+            
+            <a href="#" class="module-card">
+                <div class="module-icon">🔧</div>
+                <h3 class="module-title">Asset Management</h3>
+                <p class="module-description">Manage equipment lifecycle, track maintenance history, and monitor asset health.</p>
+            </a>
+            
+            <a href="#" class="module-card">
+                <div class="module-icon">📈</div>
+                <h3 class="module-title">Reporting</h3>
+                <p class="module-description">Generate comprehensive reports on maintenance activities and performance metrics.</p>
+            </a>
+        </div>
+        
+        <!-- Benefits Section -->
+        <section class="benefits-section">
+            <h2 class="section-title">Key Benefits</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3 class="benefit-title"><span>1</span>Increased Efficiency</h3>
+                    <p class="benefit-description">Eliminate paper-based processes and reduce administrative work with digital workflows and automated scheduling.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3 class="benefit-title"><span>2</span>Improved Compliance</h3>
+                    <p class="benefit-description">Maintain regulatory compliance with automated documentation, audit trails, and standardized maintenance procedures.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3 class="benefit-title"><span>3</span>Enhanced Visibility</h3>
+                    <p class="benefit-description">Gain insights into maintenance operations with real-time status updates and comprehensive reporting capabilities.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3 class="benefit-title"><span>4</span>Reduced Downtime</h3>
+                    <p class="benefit-description">Prevent equipment failures with proactive maintenance scheduling and monitoring of asset health indicators.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Workflow Section -->
+        <section class="workflow-section">
+            <h2 class="section-title">Maintenance Workflow</h2>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-name">Schedule</div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-name">Assign</div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-name">Execute</div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-name">Verify</div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-name">Report</div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-bottom">
+                <p>© 2025 System for Preventive and Automated Maintenance (SPAM). All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

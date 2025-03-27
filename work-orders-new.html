@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Orders - Preventive Maintenance Management System</title>
+  <link rel="stylesheet" href="custom.css">
+  <style>
+    .work-orders-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+      align-items: flex-end;
+    }
+    
+    .filter-item {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .filter-label {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--neutral-dark);
+    }
+    
+    .filter-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    
+    .highlight-row {
+      animation: highlight-fade 3s ease-out;
+    }
+    
+    @keyframes highlight-fade {
+      0% { background-color: rgba(253, 185, 39, 0.3); }
+      100% { background-color: transparent; }
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .empty-state svg {
+      margin-bottom: 16px;
+      color: var(--neutral-light);
+    }
+    
+    .empty-state h3 {
+      margin-bottom: 8px;
+      color: var(--neutral-medium);
+    }
+    
+    .empty-state p {
+      color: var(--neutral-medium);
+      max-width: 500px;
+      margin: 0 auto 20px;
+    }
+    
+    .time-inputs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .time-inputs input {
+      width: 60px;
+    }
+    
+    .time-label {
+      color: var(--neutral-medium);
+      font-size: 14px;
+    }
+    
+    .loading-message {
+      text-align: center;
+      padding: 20px;
+      color: var(--neutral-medium);
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Header with SPAM Logo -->
+  <div class="page-header">
+    <div style="display: flex; align-items: center;">
+      <a href="index.html" class="home-button" title="Return to Home">
+        <div class="spam-logo">SPAM</div>
+      </a>
+      <h1>Work Orders</h1>
+    </div>
+    <button class="primary-button" id="create-work-order-btn" onclick="showNewWorkOrderForm()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Create Work Order
+    </button>
+  </div>
+  
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <h2>Filter Work Orders</h2>
+    <div class="filter-row">
+      <div class="filter-item">
+        <label class="filter-label">Status</label>
+        <select id="status-filter" class="form-select">
+          <option value="">All Statuses</option>
+          <option value="Open">Open</option>
+          <option value="In Progress">In Progress</option>
+          <option value="On Hold">On Hold</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+      
+      <div class="filter-item">
+        <label class="filter-label">Priority</label>
+        <select id="priority-filter" class="form-select">
+          <option value="">All Priorities</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+      
+      <div class="filter-item">
+        <label class="filter-label">Maintenance Type</label>
+        <select id="type-filter" class="form-select">
+          <option value="">All Types</option>
+          <option value="Preventive">Preventive</option>
+          <option value="Corrective">Corrective</option>
+          <option value="Predictive">Predictive</option>
+          <option value="Emergency">Emergency</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="filter-row">
+      <div class="filter-item">
+        <label class="filter-label">From Date</label>
+        <input type="date" id="from-date-filter" class="form-input">
+      </div>
+      
+      <div class="filter-item">
+        <label class="filter-label">To Date</label>
+        <input type="date" id="to-date-filter" class="form-input">
+      </div>
+      
+      <div class="filter-item">
+        <label class="filter-label">Assigned To</label>
+        <input type="text" id="assigned-to-filter" class="form-input" placeholder="Enter name or email">
+      </div>
+    </div>
+    
+    <div class="filter-row">
+      <div class="filter-item">
+        <label class="filter-label">Sort By</label>
+        <select id="sort-by-filter" class="form-select">
+          <option value="date-desc">Date (Newest First)</option>
+          <option value="date-asc">Date (Oldest First)</option>
+          <option value="priority">Priority (High to Low)</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+      
+      <div class="filter-actions">
+        <button id="reset-filters" class="secondary-button">Reset Filters</button>
+        <button id="apply-filters" class="primary-button">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Work Orders Table Container -->
+  <div class="work-orders-container">
+    <div id="work-orders-table" class="data-table">
+      <p class="loading-message">Loading work orders...</p>
+    </div>
+  </div>
+  
+  <!-- Work Order Details Modal -->
+  <div id="work-order-details-modal" class="asset-details-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Work Order Details</h3>
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+      </div>
+      <div id="work-order-details">
+        <!-- Details will be populated dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-button" onclick="closeModal()">Close</button>
+        <button id="update-status-button" class="primary-button" onclick="updateWorkOrderStatus()">Update Status</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- New Work Order Form Modal -->
+  <div id="new-work-order-modal" class="asset-details-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Work Order</h3>
+        <button class="close-modal" onclick="closeNewWorkOrderModal()">&times;</button>
+      </div>
+      
+      <form id="new-work-order-form" onsubmit="event.preventDefault(); saveNewWorkOrder();">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+          <div class="form-group">
+            <label for="title" class="form-label">Work Order Title<span class="required">*</span></label>
+            <input type="text" id="title" class="form-input" required placeholder="Brief description of work">
+          </div>
+          
+          <div class="form-group">
+            <label for="maintenance-type" class="form-label">Maintenance Type<span class="required">*</span></label>
+            <select id="maintenance-type" class="form-select" required>
+              <option value="">Select Type</option>
+              <option value="Preventive">Preventive</option>
+              <option value="Corrective">Corrective</option>
+              <option value="Predictive">Predictive</option>
+              <option value="Emergency">Emergency</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="equipment-id" class="form-label">Equipment ID<span class="required">*</span></label>
+            <input type="text" id="equipment-id" class="form-input" required placeholder="Equipment identifier">
+          </div>
+          
+          <div class="form-group">
+            <label for="priority" class="form-label">Priority<span class="required">*</span></label>
+            <select id="priority" class="form-select" required>
+              <option value="">Select Priority</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="due-date" class="form-label">Due Date<span class="required">*</span></label>
+            <input type="date" id="due-date" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="assigned-to" class="form-label">Assigned To<span class="required">*</span></label>
+            <input type="text" id="assigned-to" class="form-input" required placeholder="Technician or team">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Estimated Time</label>
+            <div class="time-inputs">
+              <input type="number" id="time-hours" class="form-input" min="0" max="100" value="1">
+              <span class="time-label">hours</span>
+              <input type="number" id="time-minutes" class="form-input" min="0" max="59" value="0">
+              <span class="time-label">min</span>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="department" class="form-label">Department</label>
+            <input type="text" id="department" class="form-input" placeholder="Responsible department">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="issue-description" class="form-label">Issue Description<span class="required">*</span></label>
+          <textarea id="issue-description" class="form-textarea" required placeholder="Detailed description of the issue or maintenance task"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="work-instructions" class="form-label">Work Instructions</label>
+          <textarea id="work-instructions" class="form-textarea" placeholder="Step-by-step instructions for completing the work"></textarea>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+          <div class="form-group">
+            <label for="required-parts" class="form-label">Required Parts</label>
+            <textarea id="required-parts" class="form-textarea" placeholder="List of parts and materials needed"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="safety-precautions" class="form-label">Safety Precautions</label>
+            <textarea id="safety-precautions" class="form-textarea" placeholder="Safety measures to be observed"></textarea>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="reference-documents" class="form-label">Reference Documents</label>
+          <textarea id="reference-documents" class="form-textarea" placeholder="Manuals, diagrams, or other reference materials"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Special Requirements</label>
+          <div>
+            <input type="checkbox" id="shutdown-required" class="form-checkbox">
+            <label for="shutdown-required">Equipment Shutdown Required</label>
+          </div>
+          <div>
+            <input type="checkbox" id="lockout-tagout-required" class="form-checkbox">
+            <label for="lockout-tagout-required">Lockout/Tagout Required</label>
+          </div>
+          <div>
+            <input type="checkbox" id="permits-required" class="form-checkbox">
+            <label for="permits-required">Special Permits Required</label>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="secondary-button" onclick="closeNewWorkOrderModal()">Cancel</button>
+          <button type="submit" class="primary-button">Create Work Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    // Global variables
+    let allWorkOrders = [];
+    let selectedWorkOrderId = null;
+    let lastSelectedRow = null;
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set default dates for filters (current month)
+      const today = new Date();
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(today.getMonth() - 1);
+      
+      document.getElementById('from-date-filter').value = formatDate(oneMonthAgo);
+      document.getElementById('to-date-filter').value = formatDate(today);
+      
+      // Add event listeners
+      document.getElementById('reset-filters').addEventListener('click', resetFilters);
+      document.getElementById('apply-filters').addEventListener('click', loadWorkOrders);
+      
+      // Load work orders
+      loadWorkOrders();
+    });
+    
+    // Helper function to format a date as YYYY-MM-DD
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    
+    // Reset filters to default values
+    function resetFilters() {
+      document.getElementById('status-filter').value = '';
+      document.getElementById('priority-filter').value = '';
+      document.getElementById('type-filter').value = '';
+      document.getElementById('assigned-to-filter').value = '';
+      
+      const today = new Date();
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(today.getMonth() - 1);
+      
+      document.getElementById('from-date-filter').value = formatDate(oneMonthAgo);
+      document.getElementById('to-date-filter').value = formatDate(today);
+      document.getElementById('sort-by-filter').value = 'date-desc';
+      
+      // Reload with reset filters
+      loadWorkOrders();
+    }
+    
+    // Main function to load and display work orders
+    function loadWorkOrders() {
+      document.getElementById('work-orders-table').innerHTML = '<p class="loading-message">Loading work orders...</p>';
+      
+      // Get filters
+      const filters = {
+        status: document.getElementById('status-filter').value,
+        priority: document.getElementById('priority-filter').value,
+        maintenanceType: document.getElementById('type-filter').value,
+        fromDate: document.getElementById('from-date-filter').value,
+        toDate: document.getElementById('to-date-filter').value,
+        assignedTo: document.getElementById('assigned-to-filter').value,
+        sortBy: document.getElementById('sort-by-filter').value
+      };
+      
+      console.log("Filter settings:", filters);
+      
+      // Get the ID of the last created work order (if any)
+      const lastCreatedWorkOrder = localStorage.getItem('lastCreatedWorkOrder');
+      
+      // Clear the global array
+      allWorkOrders = [];
+      
+      // Check if we have work orders in localStorage
+      const savedWorkOrders = localStorage.getItem('workOrders');
+      
+      if (savedWorkOrders && JSON.parse(savedWorkOrders).length > 0) {
+        try {
+          // Parse workOrders from localStorage
+          const workOrders = JSON.parse(savedWorkOrders);
+          console.log(`Loaded ${workOrders.length} work orders from storage`);
+          
+          // Create a deep copy to avoid reference issues
+          allWorkOrders = JSON.parse(JSON.stringify(workOrders));
+          
+          // Apply filters
+          let filteredWorkOrders = allWorkOrders.filter(order => {
+            // Status filter
+            if (filters.status && order.Status !== filters.status) {
+              return false;
+            }
+            
+            // Priority filter
+            if (filters.priority && order.Priority !== filters.priority) {
+              return false;
+            }
+            
+            // Maintenance Type filter
+            if (filters.maintenanceType && order.MaintenanceType !== filters.maintenanceType) {
+              return false;
+            }
+            
+            // Date range filter
+            if (filters.fromDate) {
+              const fromDate = new Date(filters.fromDate);
+              const orderDate = new Date(order.CreationDate);
+              if (orderDate < fromDate) {
+                return false;
+              }
+            }
+            
+            if (filters.toDate) {
+              const toDate = new Date(filters.toDate);
+              toDate.setHours(23, 59, 59, 999); // End of the day
+              const orderDate = new Date(order.CreationDate);
+              if (orderDate > toDate) {
+                return false;
+              }
+            }
+            
+            // Assigned To filter
+            if (filters.assignedTo && 
+                !order.AssignedTo.toLowerCase().includes(filters.assignedTo.toLowerCase())) {
+              return false;
+            }
+            
+            return true;
+          });
+          
+          // Apply sorting
+          if (filters.sortBy) {
+            filteredWorkOrders.sort((a, b) => {
+              switch (filters.sortBy) {
+                case 'date-desc':
+                  return new Date(b.CreationDate) - new Date(a.CreationDate);
+                case 'date-asc':
+                  return new Date(a.CreationDate) - new Date(b.CreationDate);
+                case 'priority':
+                  const priorityOrder = { 'High': 1, 'Medium': 2, 'Low': 3 };
+                  return priorityOrder[a.Priority] - priorityOrder[b.Priority];
+                case 'status':
+                  const statusOrder = { 
+                    'Open': 1, 
+                    'In Progress': 2, 
+                    'On Hold': 3, 
+                    'Completed': 4, 
+                    'Cancelled': 5 
+                  };
+                  return (statusOrder[a.Status] || 99) - (statusOrder[b.Status] || 99);
+                default:
+                  return 0;
+              }
+            });
+          }
+          
+          // Render the filtered work orders
+          renderWorkOrdersTable(filteredWorkOrders, lastCreatedWorkOrder);
+          
+        } catch (error) {
+          console.error("Error loading work orders:", error);
+          handleError(error);
+        }
+      } else {
+        // No work orders found, show empty state
+        renderEmptyState();
+      }
+    }
+    
+    // Function to render the work orders table
+    function renderWorkOrdersTable(workOrders, highlightId = null) {
+      const tableContainer = document.getElementById('work-orders-table');
+      
+      if (workOrders.length === 0) {
+        renderEmptyState();
+        return;
+      }
+      
+      // Build the table HTML
+      let tableHtml = `
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Equipment</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Assigned To</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      
+      workOrders.forEach(order => {
+        // Determine if this row should be highlighted
+        const rowClass = order.WorkOrderId === highlightId ? 'highlight-row' : '';
+        
+        // Format dates
+        const dueDate = new Date(order.DueDate).toLocaleDateString();
+        
+        // Build the row HTML
+        tableHtml += `
+          <tr id="row-${order.WorkOrderId}" class="${rowClass}">
+            <td>${order.WorkOrderId}</td>
+            <td>${order.EquipmentId || 'Not specified'}</td>
+            <td>${order.MaintenanceType || 'Not specified'}</td>
+            <td>${order.Title || order.Description || 'No description'}</td>
+            <td>
+              <span class="priority-badge ${(order.Priority || 'medium').toLowerCase()}">
+                ${order.Priority || 'Medium'}
+              </span>
+            </td>
+            <td>${order.AssignedTo || 'Unassigned'}</td>
+            <td>${dueDate}</td>
+            <td>
+              <span class="status-badge ${(order.Status || 'open').toLowerCase().replace(' ', '-')}">
+                ${order.Status || 'Open'}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button class="action-button" onclick="viewWorkOrderDetails('${order.WorkOrderId}')">View</button>
+              <button class="action-button" onclick="updateWorkOrderStatus('${order.WorkOrderId}')">Update</button>
+              <button class="action-button" onclick="deleteWorkOrder('${order.WorkOrderId}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+      
+      tableHtml += `
+            </tbody>
+          </table>
+        </div>
+      `;
+      
+      // Insert the table into the container
+      tableContainer.innerHTML = tableHtml;
+      
+      // Scroll to highlighted row if present
+      if (highlightId) {
+        const highlightedRow = document.getElementById(`row-${highlightId}`);
+        if (highlightedRow) {
+          highlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }
+    
+    // Function to render empty state
+    function renderEmptyState() {
+      const container = document.getElementById('work-orders-table');
+      container.innerHTML = `
+        <div class="empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <line x1="10" y1="9" x2="8" y2="9"></line>
+          </svg>
+          <h3>No Work Orders Found</h3>
+          <p>No work orders match your current filters or none have been created yet.</p>
+          <button class="primary-button" onclick="showNewWorkOrderForm()">Create Your First Work Order</button>
+        </div>
+      `;
+    }
+    
+    // Function to view work order details
+    function viewWorkOrderDetails(workOrderId) {
+      selectedWorkOrderId = workOrderId;
+      
+      // Find the work order in the current list
+      const workOrder = allWorkOrders.find(order => order.WorkOrderId === workOrderId);
+      
+      if (!workOrder) {
+        showErrorNotification('Work order not found.');
+        return;
+      }
+      
+      // Populate the modal with details
+      const detailsHtml = `
+        <div class="detail-row">
+          <div class="detail-label">Work Order ID:</div>
+          <div class="detail-value">${workOrder.WorkOrderId}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Title:</div>
+          <div class="detail-value">${workOrder.Title || 'Not specified'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Equipment ID:</div>
+          <div class="detail-value">${workOrder.EquipmentId || 'Not specified'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Maintenance Type:</div>
+          <div class="detail-value">${workOrder.MaintenanceType || 'Not specified'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Priority:</div>
+          <div class="detail-value">
+            <span class="priority-badge ${(workOrder.Priority || 'medium').toLowerCase()}">
+              ${workOrder.Priority || 'Medium'}
+            </span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Description:</div>
+          <div class="detail-value">${workOrder.Description || 'No description provided'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Assigned To:</div>
+          <div class="detail-value">${workOrder.AssignedTo || 'Unassigned'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Creation Date:</div>
+          <div class="detail-value">${new Date(workOrder.CreationDate).toLocaleDateString()}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Due Date:</div>
+          <div class="detail-value">${new Date(workOrder.DueDate).toLocaleDateString()}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Status:</div>
+          <div class="detail-value">
+            <span class="status-badge ${(workOrder.Status || 'open').toLowerCase().replace(' ', '-')}">
+              ${workOrder.Status || 'Open'}
+            </span>
+          </div>
+        </div>
+        ${workOrder.CompletionDate ? `
+        <div class="detail-row">
+          <div class="detail-label">Completion Date:</div>
+          <div class="detail-value">${new Date(workOrder.CompletionDate).toLocaleDateString()}</div>
+        </div>
+        ` : ''}
+        ${workOrder.Department ? `
+        <div class="detail-row">
+          <div class="detail-label">Department:</div>
+          <div class="detail-value">${workOrder.Department}</div>
+        </div>
+        ` : ''}
+        ${workOrder.WorkInstructions ? `
+        <div class="detail-row">
+          <div class="detail-label">Work Instructions:</div>
+          <div class="detail-value">${workOrder.WorkInstructions}</div>
+        </div>
+        ` : ''}
+        ${workOrder.RequiredParts ? `
+        <div class="detail-row">
+          <div class="detail-label">Required Parts:</div>
+          <div class="detail-value">${workOrder.RequiredParts}</div>
+        </div>
+        ` : ''}
+        ${workOrder.SafetyPrecautions ? `
+        <div class="detail-row">
+          <div class="detail-label">Safety Precautions:</div>
+          <div class="detail-value">${workOrder.SafetyPrecautions}</div>
+        </div>
+        ` : ''}
+        ${workOrder.ReferenceDocuments ? `
+        <div class="detail-row">
+          <div class="detail-label">Reference Documents:</div>
+          <div class="detail-value">${workOrder.ReferenceDocuments}</div>
+        </div>
+        ` : ''}
+        ${workOrder.Requirements ? `
+        <div class="detail-row">
+          <div class="detail-label">Special Requirements:</div>
+          <div class="detail-value">
+            ${workOrder.Requirements.shutdownRequired ? '<div>• Equipment Shutdown Required</div>' : ''}
+            ${workOrder.Requirements.lockoutTagoutRequired ? '<div>• Lockout/Tagout Required</div>' : ''}
+            ${workOrder.Requirements.permitsRequired ? '<div>• Special Permits Required</div>' : ''}
+            ${!workOrder.Requirements.shutdownRequired && 
+              !workOrder.Requirements.lockoutTagoutRequired && 
+              !workOrder.Requirements.permitsRequired ? 'None' : ''}
+          </div>
+        </div>
+        ` : ''}
+      `;
+      
+      document.getElementById('work-order-details').innerHTML = detailsHtml;
+      
+      // Update the button text based on current status
+      document.getElementById('update-status-button').textContent = 
+        workOrder.Status === 'Completed' ? 'Reopen Work Order' : 'Update Status';
+      
+      // Show the modal
+      const modal = document.getElementById('work-order-details-modal');
+      modal.classList.add('visible');
+      
+      // Prevent scrolling of the body when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // Function to close the details modal
+    function closeModal() {
+      const modal = document.getElementById('work-order-details-modal');
+      modal.classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+    
+    // Function to show the new work order form
+    function showNewWorkOrderForm() {
+      // Set the initial due date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('due-date').value = formatDate(tomorrow);
+      
+      // Set default values
+      document.getElementById('time-hours').value = "1";
+      document.getElementById('time-minutes').value = "0";
+      
+      // Show the modal
+      document.getElementById('new-work-order-modal').classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // Function to close the new work order form modal
+    function closeNewWorkOrderModal() {
+      document.getElementById('new-work-order-modal').classList.remove('visible');
+      document.body.style.overflow = '';
+      
+      // Reset the form
+      document.getElementById('new-work-order-form').reset();
+    }
+    
+    // Function to save a new work order
+    function saveNewWorkOrder() {
+      try {
+        // Get form values
+        const title = document.getElementById('title').value.trim();
+        const maintenanceType = document.getElementById('maintenance-type').value;
+        const equipmentId = document.getElementById('equipment-id').value.trim();
+        const priority = document.getElementById('priority').value;
+        const dueDate = document.getElementById('due-date').value;
+        const assignedTo = document.getElementById('assigned-to').value.trim();
+        const timeHours = document.getElementById('time-hours').value;
+        const timeMinutes = document.getElementById('time-minutes').value;
+        const department = document.getElementById('department').value.trim();
+        const issueDescription = document.getElementById('issue-description').value.trim();
+        const workInstructions = document.getElementById('work-instructions').value.trim();
+        const requiredParts = document.getElementById('required-parts').value.trim();
+        const safetyPrecautions = document.getElementById('safety-precautions').value.trim();
+        const referenceDocuments = document.getElementById('reference-documents').value.trim();
+        const shutdownRequired = document.getElementById('shutdown-required').checked;
+        const lockoutTagoutRequired = document.getElementById('lockout-tagout-required').checked;
+        const permitsRequired = document.getElementById('permits-required').checked;
+        
+        // Log values for debugging
+        console.log("Creating new work order...");
+        
+        // Validate required fields (HTML5 required attribute handles most of this)
+        if (!title || !maintenanceType || !equipmentId || !priority || !dueDate || !assignedTo || !issueDescription) {
+          showErrorNotification('Please fill in all required fields');
+          return;
+        }
+        
+        // Get current date/time
+        const now = new Date();
+        
+        // Generate a unique work order ID
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const randomId = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+        
+        // Format: WO-YYYY-MM-DD-XXXX
+        const workOrderId = `WO-${year}${month}${day}-${randomId}`;
+        
+        // Create the work order object
+        const workOrder = {
+          WorkOrderId: workOrderId,
+          Title: title,
+          MaintenanceType: maintenanceType,
+          EquipmentId: equipmentId,
+          Priority: priority,
+          DueDate: dueDate ? new Date(dueDate).toISOString() : now.toISOString(),
+          AssignedTo: assignedTo,
+          EstimatedTime: {
+            hours: parseInt(timeHours, 10) || 0,
+            minutes: parseInt(timeMinutes, 10) || 0
+          },
+          Department: department,
+          Description: issueDescription,
+          WorkInstructions: workInstructions,
+          RequiredParts: requiredParts,
+          SafetyPrecautions: safetyPrecautions,
+          ReferenceDocuments: referenceDocuments,
+          Requirements: {
+            shutdownRequired: shutdownRequired,
+            lockoutTagoutRequired: lockoutTagoutRequired,
+            permitsRequired: permitsRequired
+          },
+          Status: 'Open',
+          CreationDate: now.toISOString(),
+          CompletionDate: null,
+          LastUpdated: now.toISOString()
+        };
+        
+        // Load existing work orders
+        let workOrders = [];
+        try {
+          const savedWorkOrders = localStorage.getItem('workOrders');
+          workOrders = savedWorkOrders ? JSON.parse(savedWorkOrders) : [];
+          if (!Array.isArray(workOrders)) {
+            console.error("Saved work orders is not an array, resetting");
+            workOrders = [];
+          }
+        } catch (e) {
+          console.error("Error loading work orders:", e);
+          workOrders = [];
+        }
+        
+        // Add the new work order
+        workOrders.push(workOrder);
+        
+        // Save to localStorage
+        localStorage.setItem('workOrders', JSON.stringify(workOrders));
+        
+        // Save the ID to highlight the new work order
+        localStorage.setItem('lastCreatedWorkOrder', workOrderId);
+        
+        // Close the modal
+        closeNewWorkOrderModal();
+        
+        // Reload the work orders table
+        loadWorkOrders();
+        
+        // Show success notification
+        showSuccessNotification(`Work Order ${workOrderId} has been created successfully!`);
+        
+      } catch (error) {
+        console.error("Error creating work order:", error);
+        showErrorNotification(`Failed to create work order: ${error.message || 'Unknown error'}`);
+      }
+    }
+    
+    // Function to handle updating work order status
+    function updateWorkOrderStatus(workOrderId) {
+      if (workOrderId) {
+        selectedWorkOrderId = workOrderId;
+      }
+      
+      // Find the work order
+      const workOrder = allWorkOrders.find(order => order.WorkOrderId === selectedWorkOrderId);
+      
+      if (!workOrder) {
+        showErrorNotification('Work order not found.');
+        return;
+      }
+      
+      // Create form HTML based on current status
+      let formHtml = `
+        <h3>Update Status for Work Order ${workOrder.WorkOrderId}</h3>
+        <div class="form-group">
+          <label class="form-label">Current Status: 
+            <span class="status-badge ${(workOrder.Status || 'open').toLowerCase().replace(' ', '-')}">
+              ${workOrder.Status || 'Open'}
+            </span>
+          </label>
+        </div>
+      `;
+      
+      if (workOrder.Status === 'Completed') {
+        formHtml += `
+          <p>This work order is currently marked as completed. Would you like to reopen it?</p>
+          <div class="form-group">
+            <label class="form-label">New Status:</label>
+            <select id="new-status" class="form-select">
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+            </select>
+          </div>
+        `;
+      } else {
+        formHtml += `
+          <div class="form-group">
+            <label class="form-label">New Status:</label>
+            <select id="new-status" class="form-select">
+              <option value="Open" ${workOrder.Status === 'Open' ? 'selected' : ''}>Open</option>
+              <option value="In Progress" ${workOrder.Status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="On Hold" ${workOrder.Status === 'On Hold' ? 'selected' : ''}>On Hold</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+        `;
+        
+        // Only show completion date field if new status might be "Completed"
+        formHtml += `
+          <div id="completion-date-container" class="form-group" style="display: none;">
+            <label class="form-label">Completion Date:</label>
+            <input type="date" id="completion-date" class="form-input" value="${formatDate(new Date())}">
+          </div>
+        `;
+      }
+      
+      formHtml += `
+        <div class="modal-footer">
+          <button class="secondary-button" onclick="closeUpdateStatusForm()">Cancel</button>
+          <button class="primary-button" onclick="saveWorkOrderStatus()">Save Status</button>
+        </div>
+      `;
+      
+      // Display the form in the modal
+      const modal = document.getElementById('work-order-details-modal');
+      document.getElementById('work-order-details').innerHTML = formHtml;
+      document.querySelector('.modal-title').textContent = 'Update Work Order Status';
+      
+      // Add event listener to show/hide completion date field
+      const newStatusSelect = document.getElementById('new-status');
+      if (newStatusSelect) {
+        newStatusSelect.addEventListener('change', function() {
+          const completionDateContainer = document.getElementById('completion-date-container');
+          if (completionDateContainer) {
+            completionDateContainer.style.display = this.value === 'Completed' ? 'block' : 'none';
+          }
+        });
+        
+        // Trigger the change event to set initial visibility
+        newStatusSelect.dispatchEvent(new Event('change'));
+      }
+      
+      // Show the modal if not already visible
+      if (!modal.classList.contains('visible')) {
+        modal.classList.add('visible');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    
+    // Function to close the update status form
+    function closeUpdateStatusForm() {
+      if (selectedWorkOrderId) {
+        viewWorkOrderDetails(selectedWorkOrderId);
+      } else {
+        closeModal();
+      }
+    }
+    
+    // Function to save the updated work order status
+    function saveWorkOrderStatus() {
+      const newStatus = document.getElementById('new-status').value;
+      const completionDateInput = document.getElementById('completion-date');
+      const completionDate = newStatus === 'Completed' && completionDateInput 
+        ? new Date(completionDateInput.value).toISOString() 
+        : null;
+      
+      // Load all work orders
+      let workOrders = [];
+      try {
+        const savedWorkOrders = localStorage.getItem('workOrders');
+        workOrders = savedWorkOrders ? JSON.parse(savedWorkOrders) : [];
+      } catch (e) {
+        console.error("Error loading work orders:", e);
+        showErrorNotification("Failed to load work orders. Please try again.");
+        return;
+      }
+      
+      // Find the work order to update
+      const workOrderIndex = workOrders.findIndex(order => order.WorkOrderId === selectedWorkOrderId);
+      
+      if (workOrderIndex !== -1) {
+        // Update the work order status
+        workOrders[workOrderIndex].Status = newStatus;
+        workOrders[workOrderIndex].LastUpdated = new Date().toISOString();
+        
+        // Update completion date if status is Completed
+        if (newStatus === 'Completed') {
+          workOrders[workOrderIndex].CompletionDate = completionDate || new Date().toISOString();
+        } else {
+          // Clear completion date if not completed
+          workOrders[workOrderIndex].CompletionDate = null;
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('workOrders', JSON.stringify(workOrders));
+        
+        // Close modal
+        closeModal();
+        
+        // Reload work orders to refresh the table
+        loadWorkOrders();
+        
+        // Show success message
+        showSuccessNotification(`Work order status updated to ${newStatus}`);
+      } else {
+        showErrorNotification(`Error: Work order not found (ID: ${selectedWorkOrderId})`);
+      }
+    }
+    
+    // Function to delete a work order
+    function deleteWorkOrder(workOrderId) {
+      // Confirm before deleting
+      if (!confirm('Are you sure you want to delete this work order? This action cannot be undone.')) {
+        return;
+      }
+      
+      // Load work orders
+      let workOrders = [];
+      try {
+        const savedWorkOrders = localStorage.getItem('workOrders');
+        workOrders = savedWorkOrders ? JSON.parse(savedWorkOrders) : [];
+      } catch (e) {
+        console.error("Error loading work orders:", e);
+        showErrorNotification("Failed to load work orders. Please try again.");
+        return;
+      }
+      
+      // Find work order by ID and capture title for notification
+      const workOrderIndex = workOrders.findIndex(order => order.WorkOrderId === workOrderId);
+      let workOrderTitle = "";
+      
+      if (workOrderIndex !== -1) {
+        // Get title for notification
+        workOrderTitle = workOrders[workOrderIndex].Title || workOrderId;
+        
+        // Remove the work order
+        workOrders.splice(workOrderIndex, 1);
+        
+        // Save the updated array back to localStorage
+        localStorage.setItem('workOrders', JSON.stringify(workOrders));
+        
+        // Reload the table
+        loadWorkOrders();
+        
+        // Show success message
+        showSuccessNotification(`Work order "${workOrderTitle}" has been deleted.`);
+      } else {
+        showErrorNotification(`Error: Work order not found (ID: ${workOrderId})`);
+      }
+    }
+    
+    // Function to handle errors
+    function handleError(error) {
+      console.error('Error:', error);
+      document.getElementById('work-orders-table').innerHTML = `
+        <div class="card" style="text-align: center; padding: 24px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <h3 style="margin-top: 16px; color: var(--accent-color);">Error Loading Work Orders</h3>
+          <p style="margin-bottom: 24px;">${error.message || 'An unexpected error occurred. Please try again later.'}</p>
+          <button class="secondary-button" onclick="loadWorkOrders()">Try Again</button>
+        </div>
+      `;
+    }
+    
+    // Function to show success notification
+    function showSuccessNotification(message) {
+      // Create notification element if it doesn't exist
+      let notification = document.getElementById('success-notification');
+      if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'success-notification';
+        notification.style.cssText = `
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background-color: var(--secondary-color);
+          color: white;
+          padding: 16px 24px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          font-weight: 500;
+          transform: translateY(100px);
+          opacity: 0;
+          transition: transform 0.3s ease, opacity 0.3s ease;
+        `;
+        document.body.appendChild(notification);
+      }
+      
+      // Add checkmark icon
+      notification.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px;">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        ${message}
+      `;
+      
+      // Show the notification
+      setTimeout(() => {
+        notification.style.transform = 'translateY(0)';
+        notification.style.opacity = '1';
+      }, 100);
+      
+      // Hide after 5 seconds
+      setTimeout(() => {
+        notification.style.transform = 'translateY(100px)';
+        notification.style.opacity = '0';
+      }, 5000);
+    }
+    
+    // Function to show error notification
+    function showErrorNotification(message) {
+      // Create notification element if it doesn't exist
+      let notification = document.getElementById('error-notification');
+      if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'error-notification';
+        notification.style.cssText = `
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background-color: var(--accent-color);
+          color: white;
+          padding: 16px 24px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          font-weight: 500;
+          transform: translateY(100px);
+          opacity: 0;
+          transition: transform 0.3s ease, opacity 0.3s ease;
+        `;
+        document.body.appendChild(notification);
+      }
+      
+      // Add error icon
+      notification.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        ${message}
+      `;
+      
+      // Show the notification
+      setTimeout(() => {
+        notification.style.transform = 'translateY(0)';
+        notification.style.opacity = '1';
+      }, 100);
+      
+      // Hide after 5 seconds
+      setTimeout(() => {
+        notification.style.transform = 'translateY(100px)';
+        notification.style.opacity = '0';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

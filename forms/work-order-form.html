@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Work Order - Preventive Maintenance Management System</title>
+  <link rel="stylesheet" href="../custom.css">
+  <style>
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .form-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #dadce0;
+    }
+    
+    .form-section {
+      margin-bottom: 24px;
+    }
+    
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 16px;
+    }
+    
+    .submit-button {
+      background-color: #1a73e8;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .submit-button:hover {
+      background-color: #1765cc;
+    }
+    
+    .cancel-button {
+      background-color: #f1f3f4;
+      color: #5f6368;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 12px;
+    }
+    
+    .cancel-button:hover {
+      background-color: #e8eaed;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+    
+    .success-message {
+      background-color: #e6f4ea;
+      color: #0d652d;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #34a853;
+      display: none;
+    }
+    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -8px;
+    }
+    
+    .col {
+      padding: 0 8px;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .file-upload {
+      margin-top: 8px;
+    }
+    
+    .checkbox-group {
+      margin-top: 16px;
+    }
+    
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    
+    .time-estimate-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .narrow-input {
+      width: 100px;
+    }
+    
+    .success-message {
+      background-color: #e6f4ea;
+      color: #0d652d;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #34a853;
+      display: none;
+    }
+    
+    .warning-message {
+      background-color: #fef7e0;
+      color: #b06000;
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      border-left: 4px solid #f9ab00;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <h1>Create Work Order</h1>
+    <a href="../work-orders.html" class="secondary-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Work Orders
+    </a>
+  </div>
+  
+  <div class="success-message" id="success-message">
+    <strong>Success!</strong> The work order has been created successfully.
+  </div>
+  
+  <div class="warning-message" id="warning-message">
+    <strong>Warning:</strong> Some fields are incomplete. The work order has been saved with partial data.
+  </div>
+  
+  <div class="form-container">
+    <h2 class="form-title">Work Order Information</h2>
+    
+    <form id="work-order-form">
+      <div class="form-section">
+        <div class="form-section-title">Basic Information</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="work-order-title" class="form-label">Work Order Title</label>
+              <input type="text" id="work-order-title" class="form-input" placeholder="Enter a descriptive title" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="work-order-type" class="form-label">Maintenance Type</label>
+              <select id="work-order-type" class="form-select" required>
+                <option value="" disabled selected>Select maintenance type</option>
+                <option value="Preventive">Preventive</option>
+                <option value="Corrective">Corrective</option>
+                <option value="Predictive">Predictive</option>
+                <option value="Emergency">Emergency</option>
+                <option value="Safety">Safety</option>
+                <option value="Inspection">Inspection</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="equipment-id" class="form-label">Equipment ID</label>
+              <input type="text" id="equipment-id" class="form-input" placeholder="Enter equipment ID" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="priority" class="form-label">Priority</label>
+              <select id="priority" class="form-select" required>
+                <option value="" disabled selected>Select priority level</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Schedule & Assignment</div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="due-date" class="form-label">Due Date</label>
+              <input type="date" id="due-date" class="form-input" required>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="assigned-to" class="form-label">Assigned To</label>
+              <input type="email" id="assigned-to" class="form-input" placeholder="Enter technician email">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="form-label">Estimated Time Required</label>
+              <div class="time-estimate-container">
+                <input type="number" id="time-hours" class="form-input narrow-input" placeholder="Hours" min="0" max="999">
+                <span>hours</span>
+                <input type="number" id="time-minutes" class="form-input narrow-input" placeholder="Minutes" min="0" max="59">
+                <span>minutes</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="department" class="form-label">Requesting Department</label>
+              <select id="department" class="form-select">
+                <option value="" disabled selected>Select department</option>
+                <option value="Production">Production</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Quality Control">Quality Control</option>
+                <option value="Facilities">Facilities</option>
+                <option value="Safety">Safety</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Work Details</div>
+        
+        <div class="form-group">
+          <label for="issue-description" class="form-label">Issue Description</label>
+          <textarea id="issue-description" class="form-textarea" placeholder="Describe the issue or maintenance work needed in detail" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="work-instructions" class="form-label">Work Instructions</label>
+          <textarea id="work-instructions" class="form-textarea" placeholder="Enter step-by-step instructions for completing this work order"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Required Parts & Tools</label>
+          <textarea id="required-parts" class="form-textarea" placeholder="List any parts, tools, or materials needed for this work order"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="safety-precautions" class="form-label">Safety Precautions</label>
+          <textarea id="safety-precautions" class="form-textarea" placeholder="Enter any safety requirements or precautions for this work"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <div class="form-section-title">Additional Information</div>
+        
+        <div class="form-group">
+          <label for="reference-documents" class="form-label">Reference Documents</label>
+          <textarea id="reference-documents" class="form-textarea" placeholder="List any reference documents or procedures that may be helpful"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="image-upload" class="form-label">Upload Images (optional)</label>
+          <input type="file" id="image-upload" class="file-upload" accept="image/*" multiple>
+        </div>
+        
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="shutdown-required"> Equipment shutdown required
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="lockout-tagout-required"> Lockout/Tagout required
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="permits-required"> Special permits required
+          </label>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <a href="../work-orders.html" class="cancel-button">Cancel</a>
+        <button type="submit" class="submit-button">Create Work Order</button>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const equipmentId = urlParams.get('equipmentId');
+    
+    // Set equipment ID if it was passed in the URL
+    if (equipmentId) {
+      document.getElementById('equipment-id').value = equipmentId;
+    }
+    
+    // Set default due date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('due-date').valueAsDate = tomorrow;
+    
+    // Function to handle form submission
+    document.getElementById('work-order-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get the current time for ID generation
+      const now = new Date();
+      const year = now.getFullYear();
+      const timestamp = now.getTime();
+      const workOrderId = `WO-${year}-${timestamp.toString().substr(-6)}`;
+      
+      // Create standardized work order object - using same format across the entire application
+      const workOrder = {
+        // IMPORTANT: Using consistent capitalized field names for the entire system
+        WorkOrderId: workOrderId,
+        Title: document.getElementById('work-order-title').value,
+        MaintenanceType: document.getElementById('work-order-type').value,
+        EquipmentId: document.getElementById('equipment-id').value,
+        Priority: document.getElementById('priority').value,
+        DueDate: document.getElementById('due-date').value,
+        AssignedTo: document.getElementById('assigned-to').value,
+        EstimatedTime: {
+          hours: parseInt(document.getElementById('time-hours').value, 10) || 0,
+          minutes: parseInt(document.getElementById('time-minutes').value, 10) || 0
+        },
+        Department: document.getElementById('department').value,
+        Description: document.getElementById('issue-description').value,
+        WorkInstructions: document.getElementById('work-instructions').value,
+        RequiredParts: document.getElementById('required-parts').value,
+        SafetyPrecautions: document.getElementById('safety-precautions').value,
+        ReferenceDocuments: document.getElementById('reference-documents').value,
+        Requirements: {
+          shutdownRequired: document.getElementById('shutdown-required').checked,
+          lockoutTagoutRequired: document.getElementById('lockout-tagout-required').checked,
+          permitsRequired: document.getElementById('permits-required').checked
+        },
+        Status: 'Open',
+        CreationDate: now.toISOString(),
+        CompletionDate: null,
+        LastUpdated: now.toISOString()
+      };
+      
+      // Only check for incomplete optional fields
+      let hasIncompleteData = false;
+      
+      // Check if any optional fields are empty
+      if (!workOrder.AssignedTo || !workOrder.Department || 
+          !workOrder.WorkInstructions || !workOrder.RequiredParts || 
+          !workOrder.SafetyPrecautions || !workOrder.ReferenceDocuments ||
+          (workOrder.EstimatedTime.hours === 0 && workOrder.EstimatedTime.minutes === 0)) {
+        hasIncompleteData = true;
+        console.log('Incomplete data detected:', {
+          assignedTo: !workOrder.AssignedTo,
+          department: !workOrder.Department,
+          workInstructions: !workOrder.WorkInstructions,
+          requiredParts: !workOrder.RequiredParts,
+          safetyPrecautions: !workOrder.SafetyPrecautions,
+          referenceDocuments: !workOrder.ReferenceDocuments,
+          zeroTimeEstimate: (workOrder.EstimatedTime.hours === 0 && workOrder.EstimatedTime.minutes === 0)
+        });
+      }
+      
+      // For incomplete data - Ask the user if they want to continue
+      if (hasIncompleteData) {
+        console.log('About to show confirmation dialog');
+        // Show confirmation dialog
+        const confirmSubmit = confirm("Some fields are incomplete. Do you want to continue with partial data?");
+        console.log('Confirmation dialog result:', confirmSubmit);
+        if (!confirmSubmit) {
+          console.log('User canceled form submission');
+          return; // User chose to cancel and complete the form
+        }
+        console.log('User confirmed to continue with incomplete data');
+        // Show warning message
+        document.getElementById('warning-message').style.display = 'block';
+      }
+      
+      // Save to localStorage - using a consistent naming convention
+      let workOrders = JSON.parse(localStorage.getItem('workOrders') || '[]');
+      workOrders.push(workOrder);
+      localStorage.setItem('workOrders', JSON.stringify(workOrders));
+      
+      // Store the ID of the newly created work order to highlight it in the table
+      localStorage.setItem('lastCreatedWorkOrder', workOrderId);
+      
+      console.log('Work Order created and saved:', workOrder);
+      
+      // Show success message
+      document.getElementById('success-message').style.display = 'block';
+      
+      // Reset form
+      setTimeout(() => {
+        document.getElementById('work-order-form').reset();
+        
+        // Hide messages
+        document.getElementById('success-message').style.display = 'none';
+        document.getElementById('warning-message').style.display = 'none';
+        
+        // If equipment ID was provided in URL, keep it
+        if (equipmentId) {
+          document.getElementById('equipment-id').value = equipmentId;
+        }
+        
+        // Reset the due date to tomorrow
+        document.getElementById('due-date').valueAsDate = tomorrow;
+        
+        // Redirect back to work orders list after a delay
+        setTimeout(() => {
+          window.location.href = '../work-orders.html';
+        }, 1000);
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
